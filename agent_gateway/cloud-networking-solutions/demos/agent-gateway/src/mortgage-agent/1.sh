@@ -1,0 +1,1 @@
+uv run python deploy_agent.py --project=$PROJECT_ID --ge-deploy-only="projects/${PROJECT_ID}/locations/${REGION}/reasoningEngines/5766644368324689920"  --app-id="gemini-enterprise-17617673_1761767394641"  --oauth-client-id="851970768145-k5gmeu9oisbf5rrggotn7dq3mc0a1vof.apps.googleusercontent.com"
