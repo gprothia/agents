@@ -4,7 +4,7 @@ from typing import Optional
 from google.oauth2.credentials import Credentials
 from google.adk.tools import ToolContext
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ASKHR")
 
 def get_user_credentials(tool_context: ToolContext) -> Optional[Credentials]:
     """

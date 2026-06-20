@@ -19,7 +19,7 @@ from tools import ( # <--- Changed from .tools to avoid relative import error
     search_hr_policy,
     get_employee_info,
     update_employee_info,
-    get_current_user_context
+    get_user_context
 )
 
 MODEL = os.getenv("MODEL", "gemini-2.5-flash")
@@ -29,7 +29,7 @@ policy_search_agent = Agent(
     name="policy_search_agent",
     description="Search and answer questions regarding company HR policies, benefits, and rules.",
     instruction=POLICY_SEARCH_INSTRUCTION,
-    tools=[search_hr_policy, get_current_user_context],
+    tools=[search_hr_policy],
     model=MODEL
 )
 
@@ -38,7 +38,7 @@ get_info_agent = Agent(
     name="get_info_agent",
     description="Retrieve personal employee information such as leave balance, address, or remote status.",
     instruction=GET_INFO_INSTRUCTION,
-    tools=[get_employee_info, get_current_user_context],
+    tools=[get_employee_info],
     model=MODEL
 )
 
@@ -47,7 +47,7 @@ update_info_agent = Agent(
     name="update_info_agent",
     description="Update personal employee information such as contact details or address.",
     instruction=UPDATE_INFO_INSTRUCTION,
-    tools=[update_employee_info, get_current_user_context],
+    tools=[update_employee_info],
     model=MODEL
 )
 
@@ -60,12 +60,8 @@ update_info_agent = Agent(
 root_agent = Agent(
     name="askhr_agent",
     instruction=ROOT_AGENT_INSTRUCTION,
-    tools=[
-        AgentTool(policy_search_agent), 
-        AgentTool(get_info_agent), 
-        AgentTool(update_info_agent),
-        get_current_user_context
-    ],
+    before_agent_callback=get_user_context,
+    sub_agents=[policy_search_agent, get_info_agent, update_info_agent],
     model=MODEL
 )
 

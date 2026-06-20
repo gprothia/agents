@@ -6,102 +6,69 @@ import contextvars
 from google.cloud import discoveryengine
 from google.adk.tools import ToolContext
 from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("ASKHR")
 
 from auth import get_user_credentials # <--- Changed from .auth to avoid relative import error
-
-# --- Safe Cache for Gemini Identity ---
-_current_user_email = contextvars.ContextVar("user_email", default=None)
-_current_user_country = contextvars.ContextVar("user_country", default=None)
-
-def _fetch_country_and_cache_isolated(email: str):
-    """Silent helper to fetch the user's country from DB and cache it isolated to this thread."""
-    if not email:
-        return
-    try:
-        api_url = os.getenv("EMPLOYEE_API_URL", "https://employee-api-851970768145.us-central1.run.app")
-        country_lookup = requests.get(f"{api_url.rstrip('/')}/employee/{email}", timeout=5)
-        if country_lookup.status_code == 200:
-            _current_user_country.set(country_lookup.json().get("country", "Unknown"))
-    except requests.exceptions.RequestException as db_e:
-        logger.warning(f"Failed country lookup for user ctx: {db_e}")
-
-def get_user_identity(tool_context: ToolContext) -> str:
-    """
-    Discover user identity by resolving the token and extracting the email.
-    Aligns with tools.py robustness patterns.
-    """
-    
-    # 1. Robust token extraction (Context -> Environment Fallback)
-    credentials = get_user_credentials(tool_context)
-    active_token = credentials.token if credentials else ""
-    
-    if not active_token:
-        # Fallback for local testing (matches your current tools.py pattern)
-        auth_id = os.getenv("AUTH_ID")
-        if auth_id:
-            active_token = os.getenv(auth_id)
-
-    if not active_token:
-        return "" # Consistent return type (String)
-
-    try:
-        # 2. Use tokeninfo (handles both JWT and Access tokens like your current code)
-        url = "https://oauth2.googleapis.com/tokeninfo"
-        params = {}
-        if len(active_token.split('.')) == 3:
-            params["id_token"] = active_token
-        else:
-            params["access_token"] = active_token
-
-        response = requests.get(url, params=params, timeout=5)
-        
-        if response.status_code == 200:
-            data = response.json()
-            email = data.get("email")
-            if email:
-                _current_user_email.set(email) 
-                _fetch_country_and_cache_isolated(email)
-                return email
-        else:
-            logger.warning(f"Token verification failed (Status {response.status_code}): {response.text}")
-                
-    except Exception as e:
-        # Use standard logging import from your file
-        logging.error(f"User identity resolution failure: {e}")
-        
-    return "" # Consistent return type on failure
-
-def get_current_user_context(tool_context: ToolContext) -> Dict[str, str]:
-    """
-    Retrieve the current authenticated user identity context (Email and HR Country).
-    Always call this tool before making ANY decisions to understand who you are speaking with.
-    
-    Returns:
-        A dictionary containing 'employee_id' (email) and 'country'.
-    """
-    try:
-        # Support mock email for testing
-        mock_email = os.getenv("MOCK_EMAIL")
-        if mock_email:
-            return {"employee_id": mock_email, "country": "USA"}
-            
-        # Evaluate context lazily
-        email = get_user_identity(tool_context) or "unknown"
-        country = _current_user_country.get() or "US"
-        return {"employee_id": email, "country": country}
-    except Exception as e:
-        #logger.error(f"Context retrieval tool failure:")
-        return {"employee_id": "Unknown", "country": "Unknown"}
-
 # --- Configuration ---
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "bold-kit-384717")
 LOCATION = os.getenv("VERTEX_SEARCH_LOCATION", "global")
 SEARCH_APP_ID = os.getenv("VERTEX_SEARCH_APP_ID", "askhr_1774746828030")
 EMPLOYEE_API_URL = os.getenv("EMPLOYEE_API_URL", "http://localhost:8080")
 
-def search_hr_policy(query: str, country: str = None) -> str:
+def get_email_from_oauth_token(token:str) -> str:
+    """
+    Discover user identity by resolving the token and extracting the email.
+    Aligns with tools.py robustness patterns.
+    """
+    
+    # 1. Robust token extraction (Context -> Environment Fallback)
+    credentials = Credentials(token=token)
+    service = build("oauth2","v2",credentials=credentials)
+    userinfo = service.userinfo().get().execute()
+    user_email = userinfo.get("email")
+    if user_email:
+        return user_email
+    else:
+        return "NotFound"
+
+def get_user_context(callback_context, **kwargs):
+    """
+    Retrieve the current authenticated user identity context (Email and HR Country).
+    Always call this tool before making ANY decisions to understand who you are speaking with.
+    """
+    try:
+        context = callback_context
+        state = context.state
+        if state.get("initialized") == True:
+            return None
+        user_email = None
+        auth_client_id = os.getenv("AUTH_ID")
+        token = state.get(auth_client_id)
+        print(f"Token: {token}")
+
+        if token:
+            user_email = get_email_from_oauth_token(token) 
+            print(f"User email: {user_email}")
+            country = "USA"
+            state["employee_id"] = user_email
+            state["country"] = country
+            state["initialized"] = True
+            logger.info(f"User email: {user_email}")
+            logger.info(f"User context: {callback_context}")
+            print(f"state: {state}")
+
+        return None
+    except Exception as e:
+        logger.error(f"Context retrieval callback failure: {e}")
+        state = callback_context.state
+        state["employee_id"] = "Unknown"
+        state["country"] = "Unknown"
+        state["initialized"] = True
+        return None
+
+def search_hr_policy(query: str,tool_context: ToolContext) -> str:
     """
     Search for HR policies, benefits, and company documentation using Vertex AI Search.
     
@@ -114,6 +81,7 @@ def search_hr_policy(query: str, country: str = None) -> str:
     """
     try:
         client = discoveryengine.SearchServiceClient()
+        country = tool_context.state.get("country")
         # Direct path to the engine's serving config as provided in the cURL
         serving_config = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/engines/{SEARCH_APP_ID}/servingConfigs/default_search"
         
@@ -174,13 +142,12 @@ def search_hr_policy(query: str, country: str = None) -> str:
         return f"An error occurred while searching policies: {str(e)}. Please try again later."
 
 
-def get_employee_info(employee_id: str, tool_context: ToolContext) -> Dict[str, Any]:
+def get_employee_info(tool_context: ToolContext) -> Dict[str, Any]:
     """
     Fetch employee information (e.g., address, leave balance, role) from the HR database (via HTTP API).
     
     Args:
-        employee_id: The unique employee ID of the user.
-        tool_context: The ADK ToolContext to extract tokens for authorization.
+        tool_context: The ADK ToolContext containing employee information.
         
     Returns:
         A dictionary containing the requested employee information, or an error dictionary.
@@ -188,6 +155,7 @@ def get_employee_info(employee_id: str, tool_context: ToolContext) -> Dict[str, 
     try:
         creds = get_user_credentials(tool_context)
         headers = {}
+        employee_id = tool_context.state.get("employee_id")
         # Commented out to avoid token validation issues on public API
         # if creds and creds.token:
         #     headers["Authorization"] = f"Bearer {creds.token}"
@@ -206,15 +174,14 @@ def get_employee_info(employee_id: str, tool_context: ToolContext) -> Dict[str, 
         return {"error": f"Failed to retrieve employee info from backend: {str(e)}"}
 
 
-def update_employee_info(employee_id: str, field_to_update: str, new_value: str, tool_context: ToolContext) -> Dict[str, Any]:
+def update_employee_info(field_to_update: str, new_value: str, tool_context: ToolContext) -> Dict[str, Any]:
     """
     Update a specific field in the employee's HR profile via the backend API.
     
     Args:
-        employee_id: The unique employee ID of the user.
         field_to_update: The name of the field to update (e.g., 'address', 'remote', 'officeLocation').
         new_value: The new value to set for the field.
-        tool_context: The ADK ToolContext to extract tokens for authorization.
+        tool_context: T tool_context: The ADK ToolContext containing employee information.
         
     Returns:
         A dictionary indicating success and displaying the updated field.
@@ -222,6 +189,7 @@ def update_employee_info(employee_id: str, field_to_update: str, new_value: str,
     try:
         creds = get_user_credentials(tool_context)
         headers = {}
+        employee_id = tool_context.state.get("employee_id")
         # Commented out to avoid token validation issues on public API
         # if creds and creds.token:
         #     headers["Authorization"] = f"Bearer {creds.token}"

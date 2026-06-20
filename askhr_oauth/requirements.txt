@@ -5,3 +5,4 @@ google-cloud-aiplatform[adk,agent_engine]
 pydantic
 python-dotenv
 cloudpickle==3.1.2
+google-api-python-client
