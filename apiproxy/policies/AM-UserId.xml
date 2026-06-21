@@ -1,0 +1,12 @@
+<AssignMessage name="AM-UserId">
+  <DisplayName>AM-UserId</DisplayName>
+  <AssignVariable>
+    <Name>user.id</Name>
+    <!-- VERIFY claim variable for your VerifyJWT policy/IdP.
+         Common forms: jwt.VJ-VerifyUser.decoded.claim.email
+                       jwt.VJ-VerifyUser.claim.sub -->
+    <Ref>jwt.VJ-VerifyUser.decoded.claim.email</Ref>
+    <Value>anonymous</Value>
+  </AssignVariable>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

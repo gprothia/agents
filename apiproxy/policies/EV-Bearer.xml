@@ -1,0 +1,8 @@
+<ExtractVariables name="EV-Bearer">
+  <DisplayName>EV-Bearer</DisplayName>
+  <Source>request</Source>
+  <Header name="Authorization">
+    <Pattern ignoreCase="true">Bearer {jwt.token}</Pattern>
+  </Header>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</ExtractVariables>

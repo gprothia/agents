@@ -1,0 +1,8 @@
+<ExtractVariables name="EV-Model">
+  <DisplayName>EV-Model</DisplayName>
+  <!-- parse the model out of the path suffix, e.g. "/gemini-2.5-flash" -->
+  <Variable name="proxy.pathsuffix">
+    <Pattern ignoreCase="true">/{requested.model}</Pattern>
+  </Variable>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</ExtractVariables>

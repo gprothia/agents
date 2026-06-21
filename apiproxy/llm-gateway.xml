@@ -1,0 +1,18 @@
+<APIProxy revision="1" name="llm-gateway">
+  <DisplayName>llm-gateway</DisplayName>
+  <Description>Governance gateway in front of Vertex AI Gemini: caller auth, per-user request + token quotas, model allow-list.</Description>
+  <ProxyEndpoints><ProxyEndpoint>default</ProxyEndpoint></ProxyEndpoints>
+  <TargetEndpoints><TargetEndpoint>default</TargetEndpoint></TargetEndpoints>
+  <Policies>
+    <Policy>EV-Bearer</Policy>
+    <Policy>VJ-VerifyUser</Policy>
+    <Policy>AM-UserId</Policy>
+    <Policy>VAK-VerifyKey</Policy>
+    <Policy>EV-Model</Policy>
+    <Policy>RF-ModelNotAllowed</Policy>
+    <Policy>Q-Requests</Policy>
+    <Policy>AM-VertexPath</Policy>
+    <Policy>EV-Tokens</Policy>
+    <Policy>Q-Tokens</Policy>
+  </Policies>
+</APIProxy>

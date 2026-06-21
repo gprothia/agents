@@ -1,0 +1,9 @@
+<Quota name="Q-Requests">
+  <DisplayName>Q-Requests</DisplayName>
+  <Identifier ref="user.id"/>
+  <Allow count="100"/>
+  <Interval>1</Interval>
+  <TimeUnit>day</TimeUnit>
+  <Distributed>true</Distributed>
+  <Synchronous>true</Synchronous>
+</Quota>

@@ -1,0 +1,10 @@
+<ExtractVariables name="EV-Tokens">
+  <DisplayName>EV-Tokens</DisplayName>
+  <Source>response</Source>
+  <JSONPayload>
+    <Variable name="tokens.total">
+      <JSONPath>$.usageMetadata.totalTokenCount</JSONPath>
+    </Variable>
+  </JSONPayload>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</ExtractVariables>

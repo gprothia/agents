@@ -1,0 +1,11 @@
+<Quota name="Q-Tokens">
+  <DisplayName>Q-Tokens</DisplayName>
+  <Identifier ref="user.id"/>
+  <Allow count="1000000"/>
+  <Interval>1</Interval>
+  <TimeUnit>day</TimeUnit>
+  <Distributed>true</Distributed>
+  <Synchronous>true</Synchronous>
+  <!-- decrement by tokens used this call; default 0 if usage missing -->
+  <MessageWeight ref="tokens.total"/>
+</Quota>

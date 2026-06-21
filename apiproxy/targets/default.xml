@@ -1,0 +1,21 @@
+<TargetEndpoint name="default">
+  <PreFlow name="PreFlow">
+    <Request>
+      <Step><Name>AM-VertexPath</Name></Step>
+    </Request>
+    <Response>
+      <Step><Name>EV-Tokens</Name></Step>
+      <Step><Name>Q-Tokens</Name></Step>
+    </Response>
+  </PreFlow>
+  <Flows/>
+  <PostFlow name="PostFlow"><Request/><Response/></PostFlow>
+  <HTTPTargetConnection>
+    <URL>https://LOCATION-aiplatform.googleapis.com</URL>
+    <Authentication>
+      <GoogleAccessToken>
+        <Scopes><Scope>https://www.googleapis.com/auth/cloud-platform</Scope></Scopes>
+      </GoogleAccessToken>
+    </Authentication>
+  </HTTPTargetConnection>
+</TargetEndpoint>

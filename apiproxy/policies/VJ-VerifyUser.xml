@@ -1,0 +1,11 @@
+<VerifyJWT name="VJ-VerifyUser">
+  <DisplayName>VJ-VerifyUser</DisplayName>
+  <Algorithm>RS256</Algorithm>
+  <Source>jwt.token</Source>
+  <!-- REPLACE: your identity provider's values -->
+  <Issuer>https://YOUR_ISSUER</Issuer>
+  <Audience>YOUR_AUDIENCE</Audience>
+  <PublicKey>
+    <JWKS uri="https://YOUR_ISSUER/.well-known/jwks.json"/>
+  </PublicKey>
+</VerifyJWT>

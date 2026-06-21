@@ -1,0 +1,5 @@
+<VerifyAPIKey name="VAK-VerifyKey">
+  <DisplayName>VAK-VerifyKey</DisplayName>
+  <!-- caller sends their app key in this header -->
+  <APIKey ref="request.header.x-apikey"/>
+</VerifyAPIKey>

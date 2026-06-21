@@ -1,0 +1,9 @@
+<AssignMessage name="AM-VertexPath">
+  <DisplayName>AM-VertexPath</DisplayName>
+  <AssignTo createNew="false" type="request"/>
+  <Set>
+    <!-- REPLACE PROJECT_ID and LOCATION. {requested.model} comes from EV-Model -->
+    <Path>/v1/projects/PROJECT_ID/locations/LOCATION/publishers/google/models/{requested.model}:generateContent</Path>
+  </Set>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>
