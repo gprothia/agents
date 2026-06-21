@@ -168,6 +168,9 @@ def main() -> None:
             requirements=requirements,
             extra_packages=extra_packages,
             display_name=args.display_name,
+            env_vars={
+                "AUTH_ID": os.getenv("AUTH_ID", ""),
+            }
         )
         action = "Updated"
     else:
