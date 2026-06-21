@@ -8,14 +8,14 @@ from google.adk.tools.agent_tool import AgentTool
 # Monkey-patch AgentTool to fix missing attribute bug in some ADK versions
 AgentTool.propagate_grounding_metadata = False
 
-from prompts import ( # <--- Changed from .prompts to avoid relative import error
+from .prompts import (
     ROOT_AGENT_INSTRUCTION,
     POLICY_SEARCH_INSTRUCTION,
     GET_INFO_INSTRUCTION,
     UPDATE_INFO_INSTRUCTION
 )
 
-from tools import ( # <--- Changed from .tools to avoid relative import error
+from .tools import (
     search_hr_policy,
     get_employee_info,
     update_employee_info,

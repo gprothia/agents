@@ -9,8 +9,6 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 logger = logging.getLogger("ASKHR")
-
-from auth import get_user_credentials # <--- Changed from .auth to avoid relative import error
 # --- Configuration ---
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "bold-kit-384717")
 LOCATION = os.getenv("VERTEX_SEARCH_LOCATION", "global")
@@ -153,7 +151,7 @@ def get_employee_info(tool_context: ToolContext) -> Dict[str, Any]:
         A dictionary containing the requested employee information, or an error dictionary.
     """
     try:
-        creds = get_user_credentials(tool_context)
+        #creds = get_user_credentials(tool_context)
         headers = {}
         employee_id = tool_context.state.get("employee_id")
         # Commented out to avoid token validation issues on public API
@@ -187,7 +185,7 @@ def update_employee_info(field_to_update: str, new_value: str, tool_context: Too
         A dictionary indicating success and displaying the updated field.
     """
     try:
-        creds = get_user_credentials(tool_context)
+        #creds = get_user_credentials(tool_context)
         headers = {}
         employee_id = tool_context.state.get("employee_id")
         # Commented out to avoid token validation issues on public API
