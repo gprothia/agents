@@ -24,6 +24,7 @@ from .tools import (
 
 MODEL = os.getenv("MODEL", "gemini-2.5-flash")
 
+
 # Sub-Agent 1: Policy Search Agent
 policy_search_agent = Agent(
     name="policy_search_agent",

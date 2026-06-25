@@ -42,6 +42,7 @@ if project_root not in sys.path:
 
 from dotenv import load_dotenv
 
+
 import vertexai
 from vertexai import agent_engines
 
@@ -156,7 +157,13 @@ def main() -> None:
     app = build_app()
     requirements = load_requirements()
     extra_packages = [PACKAGE_DIR]
-
+    env_vars = {
+    "AUTH_ID": os.environ["AUTH_ID"],
+    "EMPLOYEE_API_URL": os.environ["EMPLOYEE_API_URL"],
+    "VERTEX_SEARCH_APP_ID": os.environ["VERTEX_SEARCH_APP_ID"],
+    # ...whatever else your agent reads at runtime
+}
+    print("env_vars: ", env_vars)
     if args.agent_id:
         resource_name = full_resource_name(args.agent_id, project, location)
         logger.info("Updating existing agent: %s", resource_name)
@@ -168,9 +175,7 @@ def main() -> None:
             requirements=requirements,
             extra_packages=extra_packages,
             display_name=args.display_name,
-            env_vars={
-                "AUTH_ID": os.getenv("AUTH_ID", ""),
-            }
+            env_vars=env_vars
         )
         action = "Updated"
     else:
@@ -180,6 +185,7 @@ def main() -> None:
             requirements=requirements,
             extra_packages=extra_packages,
             display_name=args.display_name,
+            env_vars=env_vars
         )
         action = "Created"
 

@@ -31,6 +31,13 @@ def get_email_from_oauth_token(token:str) -> str:
     else:
         return "NotFound"
 
+def debug_identity(callback_context) -> dict:
+    data = callback_context.state.to_dict()      # <-- materialize the dict
+    return {
+        "state_keys": list(data.keys()),
+        "state_sample": {k: str(v)[:60] for k, v in data.items()},
+    }
+
 def get_user_context(callback_context, **kwargs):
     """
     Retrieve the current authenticated user identity context (Email and HR Country).
@@ -44,7 +51,7 @@ def get_user_context(callback_context, **kwargs):
         user_email = None
         auth_client_id = os.getenv("AUTH_ID")
         token = state.get(auth_client_id)
-        print(f"Token: {token}")
+        print("DEBUG IDENTITY",debug_identity(callback_context))
 
         if token:
             user_email = get_email_from_oauth_token(token) 
@@ -55,16 +62,18 @@ def get_user_context(callback_context, **kwargs):
             state["initialized"] = True
             logger.info(f"User email: {user_email}")
             logger.info(f"User context: {callback_context}")
-            print(f"state: {state}")
-
+            
         return None
     except Exception as e:
+        print("ERROR!!!",e)
         logger.error(f"Context retrieval callback failure: {e}")
         state = callback_context.state
         state["employee_id"] = "Unknown"
         state["country"] = "Unknown"
         state["initialized"] = True
         return None
+    
+
 
 def search_hr_policy(query: str,tool_context: ToolContext) -> str:
     """
