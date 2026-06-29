@@ -1,0 +1,45 @@
+{
+  "eval_set_id": "askhr_oauth_eval",
+  "name": "AskHR OAuth Agent Evaluation",
+  "description": "Evaluation cases to verify policy search and mock employee info retrieval with OAuth context.",
+  "eval_cases": [
+    {
+      "eval_id": "policy_search_usa",
+      "conversation": [
+        {
+          "user_content": {
+            "parts": [{"text": "What is the work from home policy?"}]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "askhr_agent",
+        "user_id": "test_user_usa",
+        "state": {
+          "initialized": true,
+          "employee_id": "employee1@example.com",
+          "country": "USA"
+        }
+      }
+    },
+    {
+      "eval_id": "get_leave_balance",
+      "conversation": [
+        {
+          "user_content": {
+            "parts": [{"text": "How many days of leave do I have left?"}]
+          }
+        }
+      ],
+      "session_input": {
+        "app_name": "askhr_agent",
+        "user_id": "test_user_usa",
+        "state": {
+          "initialized": true,
+          "employee_id": "employee1@example.com",
+          "country": "USA"
+        }
+      }
+    }
+  ]
+}

@@ -525,6 +525,25 @@ def main() -> None:
 
         os.chdir(staging_dir)
 
+        env_vars = {
+            "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
+            "GOOGLE_API_PREVENT_AGENT_TOKEN_SHARING_FOR_GCP_SERVICES": "false",
+            "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT": "true",
+            "OTEL_TRACES_SAMPLER": "parentbased_traceidratio",
+            "OTEL_TRACES_SAMPLER_ARG": "1.0",
+            "GOOGLE_GENAI_USE_VERTEXAI": "True",
+            "GOOGLE_CLOUD_LOCATION": args.model_endpoint_location,
+            "MODEL_NAME": args.model,
+            "MCP_REGISTRY_PROJECT": args.project,
+            "MCP_REGISTRY_LOCATION": args.region,
+            **({"MCP_REGISTRY_FILTER": args.registry_filter} if args.registry_filter else {}),
+            **({"MCP_REGISTRY_ENDPOINT": args.registry_endpoint} if args.registry_endpoint else {}),
+            **({"MCP_INVOKER_SA_EMAIL": args.mcp_invoker_sa} if args.mcp_invoker_sa else {}),
+        }
+        # Filter out empty or None values to prevent Vertex AI from complaining
+        # about "Required field is not set" for environment variables.
+        filtered_env_vars = {k: v for k, v in env_vars.items() if v}
+
         deploy_config = dict(
             staging_bucket=staging_bucket,
             requirements=[
@@ -554,21 +573,7 @@ def main() -> None:
                     "installation_scripts/create_venv.sh",
                 ],
             },
-            env_vars={
-                "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
-                "GOOGLE_API_PREVENT_AGENT_TOKEN_SHARING_FOR_GCP_SERVICES": "false",
-                "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT": "true",
-                "OTEL_TRACES_SAMPLER": "parentbased_traceidratio",
-                "OTEL_TRACES_SAMPLER_ARG": "1.0",
-                "GOOGLE_GENAI_USE_VERTEXAI": "True",
-                "GOOGLE_CLOUD_LOCATION": args.model_endpoint_location,
-                "MODEL_NAME": args.model,
-                "MCP_REGISTRY_PROJECT": args.project,
-                "MCP_REGISTRY_LOCATION": args.region,
-                **({"MCP_REGISTRY_FILTER": args.registry_filter} if args.registry_filter else {}),
-                **({"MCP_REGISTRY_ENDPOINT": args.registry_endpoint} if args.registry_endpoint else {}),
-                **({"MCP_INVOKER_SA_EMAIL": args.mcp_invoker_sa} if args.mcp_invoker_sa else {}),
-            },
+            env_vars=filtered_env_vars,
             display_name=args.display_name,
             description=description,
             min_instances=2,
