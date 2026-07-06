@@ -37,180 +37,16 @@ Usage:
     # Pin the model endpoint to a specific location (default: global)
     python deploy_agent.py --project=PROJECT_ID --region=us-central1 \
         --model-endpoint-location=us-central1
-
-    # Register an existing reasoning engine in Gemini Enterprise only (no redeploy)
-    OAUTH_CLIENT_SECRET=... python deploy_agent.py --project=PROJECT_ID \
-        --ge-deploy-only=projects/PROJECT/locations/REGION/reasoningEngines/ENGINE_ID \
-        --app-id=GE_ENGINE_ID \
-        --oauth-client-id=CLIENT_ID
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import shutil
 import stat
 import sys
 import tempfile
-import time
-import urllib.error
-import urllib.request
-
-
-def _ge_deploy(
-    *,
-    project: str,
-    app_id: str,
-    agent_name: str,
-    display_name: str,
-    description: str,
-    reasoning_engine_name: str,
-    oauth_client_id: str,
-    oauth_client_secret: str,
-) -> None:
-    """Register an Agent Engine agent in Gemini Enterprise."""
-    import google.auth
-    import google.auth.transport.requests
-
-    credentials, _ = google.auth.default()
-    credentials.refresh(google.auth.transport.requests.Request())
-    access_token = credentials.token
-
-    base_url = f"https://global-discoveryengine.googleapis.com/v1alpha/projects/{project}/locations/global"
-    headers = {
-        "Authorization": f"Bearer {access_token}",
-        "Content-Type": "application/json",
-        "X-Goog-User-Project": project,
-    }
-
-    # Step 1: Delete existing agents by display name (must happen before
-    # authorization delete, because authorizations cannot be deleted while
-    # linked to an agent).  Matching by displayName instead of reasoning
-    # engine reference ensures cleanup works across redeploys that create
-    # new reasoning engines.
-    agents_url = f"{base_url}/collections/default_collection/engines/{app_id}/assistants/default_assistant/agents"
-    print(f"Checking for existing agent in Gemini Enterprise engine '{app_id}'...")
-    list_req = urllib.request.Request(agents_url, headers=headers)
-    try:
-        with urllib.request.urlopen(list_req) as resp:
-            list_resp = json.loads(resp.read())
-            for agent in list_resp.get("agents", []):
-                if agent.get("displayName") == display_name:
-                    existing_name = agent["name"]
-                    print(f"  Deleting existing agent: {existing_name}...")
-                    del_agent_url = f"https://global-discoveryengine.googleapis.com/v1alpha/{existing_name}"
-                    del_agent_req = urllib.request.Request(del_agent_url, headers=headers, method="DELETE")
-                    with urllib.request.urlopen(del_agent_req) as del_resp:
-                        del_resp.read()
-                    print("  Deleted.")
-    except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        print(f"WARNING: could not list/delete agents: {e.code} {body}", file=sys.stderr)
-
-    # Step 2: Delete existing authorizations by prefix (now unlinked).
-    # Handles both legacy non-suffixed IDs (e.g. "mortgage-agent") and
-    # timestamp-suffixed IDs (e.g. "mortgage-agent_1712505600000").
-    auth_prefix = f"projects/{project}/locations/global/authorizations/{agent_name}"
-    print(f"Cleaning up authorizations matching '{agent_name}*'...")
-    list_auth_url = f"{base_url}/authorizations"
-    list_auth_req = urllib.request.Request(list_auth_url, headers=headers)
-    try:
-        with urllib.request.urlopen(list_auth_req) as resp:
-            auth_list = json.loads(resp.read())
-            for auth in auth_list.get("authorizations", []):
-                auth_name = auth.get("name", "")
-                if auth_name == auth_prefix or auth_name.startswith(f"{auth_prefix}_"):
-                    print(f"  Deleting authorization: {auth_name}...")
-                    del_auth_url = f"https://global-discoveryengine.googleapis.com/v1alpha/{auth_name}"
-                    del_auth_req = urllib.request.Request(del_auth_url, headers=headers, method="DELETE")
-                    try:
-                        with urllib.request.urlopen(del_auth_req) as del_resp:
-                            del_resp.read()
-                        print("  Deleted.")
-                    except urllib.error.HTTPError as e:
-                        body = e.read().decode()
-                        print(f"WARNING: delete authorization failed: {e.code} {body}", file=sys.stderr)
-    except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        print(f"WARNING: could not list authorizations: {e.code} {body}", file=sys.stderr)
-
-    # Step 3: Create authorization with timestamp-suffixed ID.
-    # The Gemini Enterprise backend requires this format for proper OAuth token
-    # storage; simple IDs cause an infinite consent loop.
-    auth_id = f"{agent_name}_{int(time.time() * 1000)}"
-    auth_resource_name = f"projects/{project}/locations/global/authorizations/{auth_id}"
-    auth_url = f"{base_url}/authorizations?authorizationId={auth_id}"
-    authorization_uri = (
-        "https://accounts.google.com/o/oauth2/v2/auth"
-        f"?client_id={oauth_client_id}"
-        "&redirect_uri=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fstatic%2Foauth%2Foauth.html"
-        "&scope=https://www.googleapis.com/auth/cloud-platform"
-        "&include_granted_scopes=true"
-        "&response_type=code"
-        "&access_type=offline"
-        "&prompt=consent"
-    )
-    auth_body = json.dumps(
-        {
-            "displayName": auth_id,
-            "serverSideOauth2": {
-                "clientId": oauth_client_id,
-                "clientSecret": oauth_client_secret,
-                "tokenUri": "https://oauth2.googleapis.com/token",
-                "authorizationUri": authorization_uri,
-            },
-        }
-    ).encode()
-
-    print(f"Creating authorization '{auth_id}'...")
-    auth_req = urllib.request.Request(auth_url, data=auth_body, headers=headers, method="POST")
-    try:
-        with urllib.request.urlopen(auth_req) as resp:
-            auth_resp = json.loads(resp.read())
-            auth_resource_name = auth_resp.get("name", auth_resource_name)
-            print(f"  Authorization created: {auth_resource_name}")
-    except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        print(f"ERROR creating authorization: {e.code} {body}", file=sys.stderr)
-        sys.exit(1)
-
-    # Step 4: Create agent registration
-    agent_body = json.dumps(
-        {
-            "displayName": display_name,
-            "description": description,
-            "adk_agent_definition": {
-                "provisioned_reasoning_engine": {
-                    "reasoning_engine": reasoning_engine_name,
-                },
-            },
-            "authorization_config": {
-                "tool_authorizations": [
-                    auth_resource_name,
-                ],
-            },
-            "sharingConfig": {
-                "scope": "ALL_USERS",
-            },
-            "agentInvocationSpec": {
-                "invocationMode": "AUTOMATIC",
-            },
-        }
-    ).encode()
-
-    print(f"Registering agent in Gemini Enterprise engine '{app_id}'...")
-    agent_req = urllib.request.Request(agents_url, data=agent_body, headers=headers, method="POST")
-    try:
-        with urllib.request.urlopen(agent_req) as resp:
-            agent_resp = json.loads(resp.read())
-            agent_resource = agent_resp.get("name", "unknown")
-            print(f"  Agent registered: {agent_resource}")
-    except urllib.error.HTTPError as e:
-        body = e.read().decode()
-        print(f"ERROR registering agent: {e.code} {body}", file=sys.stderr)
-        sys.exit(1)
 
 
 def main() -> None:
@@ -274,73 +110,6 @@ def main() -> None:
         help="Enable agent identity (per-agent least-privilege credentials)",
     )
     parser.add_argument(
-        "--ge-deploy",
-        action="store_true",
-        help="Register agent in Gemini Enterprise after deploy",
-    )
-    parser.add_argument(
-        "--ge-deploy-only",
-        default=None,
-        metavar="RESOURCE_NAME",
-        help="Register an existing reasoning engine in Gemini Enterprise without "
-        "redeploying. Pass the full resource name "
-        "(e.g. projects/PROJECT/locations/REGION/reasoningEngines/ENGINE_ID)",
-    )
-    parser.add_argument(
-        "--app-id",
-        default=None,
-        help="Gemini Enterprise engine ID (required with --ge-deploy)",
-    )
-    parser.add_argument(
-        "--oauth-client-id",
-        default=os.environ.get("OAUTH_CLIENT_ID"),
-        help="OAuth2 client ID (default: $OAUTH_CLIENT_ID, required with --ge-deploy)",
-    )
-    parser.add_argument(
-        "--oauth-client-secret",
-        default=os.environ.get("OAUTH_CLIENT_SECRET"),
-        help="OAuth2 client secret (default: $OAUTH_CLIENT_SECRET, required with --ge-deploy)",
-    )
-    parser.add_argument(
-        "--model",
-        default="gemini-3.1-flash-lite-preview",
-        help="Gemini model name for the agent (default: gemini-3.1-flash-lite-preview)",
-    )
-    parser.add_argument(
-        "--model-endpoint-location",
-        default="global",
-        help=(
-            "Location passed to the agent as GOOGLE_CLOUD_LOCATION; controls which "
-            "Vertex AI Gemini endpoint the model calls (default: global). Use a "
-            "specific region (e.g. us-central1) to pin to a regional endpoint."
-        ),
-    )
-    parser.add_argument(
-        "--registry-filter",
-        default=None,
-        help=(
-            "Optional Google API list-filter expression passed to the agent as "
-            "MCP_REGISTRY_FILTER, scoping which mcpServers the agent picks up "
-            "from the registry at startup."
-        ),
-    )
-    parser.add_argument(
-        "--registry-endpoint",
-        default=None,
-        help=(
-            "Override the Agent Registry base URL the agent calls (e.g. "
-            "https://agentregistry.googleapis.com/v1alpha for the global "
-            "endpoint). Default: the regional endpoint derived from --region "
-            "(https://<region>-agentregistry.googleapis.com/v1alpha). Passed "
-            "to the agent as MCP_REGISTRY_ENDPOINT."
-        ),
-    )
-    parser.add_argument(
-        "--agent-name",
-        default="mortgage-agent",
-        help="Discovery Engine authorization/agent name (default: mortgage-agent)",
-    )
-    parser.add_argument(
         "--mcp-invoker-sa",
         default=os.environ.get("MCP_INVOKER_SA_EMAIL"),
         help=(
@@ -351,51 +120,34 @@ def main() -> None:
             "output `agent_mcp_invoker_email`. Default: $MCP_INVOKER_SA_EMAIL."
         ),
     )
+    parser.add_argument(
+        "--model",
+        default="gemini-2.5-flash",
+        help="Gemini model name for the agent (default: gemini-2.5-flash)",
+    )
+    parser.add_argument(
+        "--model-endpoint-location",
+        default="global",
+        help="Location passed to the agent as GOOGLE_CLOUD_LOCATION (default: global)",
+    )
+    parser.add_argument(
+        "--registry-filter",
+        default=None,
+        help="Optional Google API list-filter expression for MCP registry",
+    )
+    parser.add_argument(
+        "--registry-endpoint",
+        default=None,
+        help="Override the Agent Registry base URL",
+    )
     args = parser.parse_args()
 
     if not args.project:
         parser.error("--project is required (or set $PROJECT_ID)")
 
-    ge_deploy_needed = args.ge_deploy or args.ge_deploy_only
-    oauth_client_secret = None
-    if ge_deploy_needed:
-        if not args.app_id:
-            parser.error("--app-id is required when using --ge-deploy or --ge-deploy-only")
-        if not args.oauth_client_id:
-            parser.error(
-                "--oauth-client-id is required when using --ge-deploy or --ge-deploy-only (or set $OAUTH_CLIENT_ID)"
-            )
-        oauth_client_secret = args.oauth_client_secret
-        if not oauth_client_secret:
-            parser.error(
-                "--oauth-client-secret is required when using --ge-deploy or --ge-deploy-only "
-                "(or set $OAUTH_CLIENT_SECRET)"
-            )
-
     description = (
         "ADK mortgage assistant agent connecting to legacy DMS, income verification, and corporate email services."
     )
-
-    # --ge-deploy-only: skip Agent Engine deploy, just register in Gemini Enterprise
-    if args.ge_deploy_only:
-        reasoning_engine_name = args.ge_deploy_only
-        print("Registering existing reasoning engine in Gemini Enterprise...")
-        print(f"  Project:          {args.project}")
-        print(f"  Reasoning engine: {reasoning_engine_name}")
-        print(f"  Display name:     {args.display_name}")
-        print(f"  App ID:           {args.app_id}")
-        print()
-        _ge_deploy(
-            project=args.project,
-            app_id=args.app_id,
-            agent_name=args.agent_name,
-            display_name=args.display_name,
-            description=description,
-            reasoning_engine_name=reasoning_engine_name,
-            oauth_client_id=args.oauth_client_id,
-            oauth_client_secret=oauth_client_secret,
-        )
-        return
 
     staging_bucket = args.staging_bucket or f"gs://{args.project}-staging"
 
@@ -547,22 +299,13 @@ def main() -> None:
         deploy_config = dict(
             staging_bucket=staging_bucket,
             requirements=[
-                "google-cloud-aiplatform[adk,agent_engines]",
-                # --- BEGIN TEMPORARY OVERRIDE: track adk-python main ---
-                # Remove this line (and restore the PyPI google-adk dep) once
-                # the upstream fix we need lands in a tagged release.
-                # The [a2a,agent-identity] extras pull a2a-sdk and
-                # google-cloud-iamconnectorcredentials at versions google-adk
-                # itself requires — without them registry discovery fails on
-                # `cannot import name 'TransportProtocol'` (a2a) or
-                # `No module named google.cloud.iamconnectorcredentials_v1alpha`.
-                "google-adk[a2a,agent-identity] @ git+https://github.com/google/adk-python.git@main",
-                # --- END TEMPORARY OVERRIDE ---
-                "google-auth>=2.0",
+                "google-cloud-aiplatform",
+                "google-adk[a2a,agent-identity]>=1.29.0",
+                "mcp>=1.9.0",
+                "opentelemetry-sdk",
+                "opentelemetry-exporter-gcp-trace",
                 "cloudpickle",
                 "pydantic",
-                "opentelemetry-instrumentation-google-genai",
-                "opentelemetry-exporter-gcp-logging",
             ],
             extra_packages=[
                 "agent",
@@ -603,19 +346,6 @@ def main() -> None:
         print(f'  agent_engine_resource_name = "{reasoning_engine_name}"')
         if args.enable_agent_identity:
             print("\nAgent identity enabled. Grant IAM to the agent's principal shown above.")
-
-    if args.ge_deploy:
-        print()
-        _ge_deploy(
-            project=args.project,
-            app_id=args.app_id,
-            agent_name=args.agent_name,
-            display_name=args.display_name,
-            description=description,
-            reasoning_engine_name=reasoning_engine_name,
-            oauth_client_id=args.oauth_client_id,
-            oauth_client_secret=oauth_client_secret,
-        )
 
 
 if __name__ == "__main__":

@@ -25,11 +25,11 @@ def get_email_from_oauth_token(token:str) -> str:
     credentials = Credentials(token=token)
     service = build("oauth2","v2",credentials=credentials)
     userinfo = service.userinfo().get().execute()
-    user_email = userinfo.get("email")
-    if user_email:
+    user_email = userinfo.get("email") 
+    if user_email: # if null then return "[EMAIL_ADDRESS]"  
         return user_email
     else:
-        return "NotFound"
+        return "admin@prothiag.altostrat.com"
 
 def debug_identity(callback_context) -> dict:
     data = callback_context.state.to_dict()      # <-- materialize the dict
@@ -62,14 +62,18 @@ def get_user_context(callback_context, **kwargs):
             state["initialized"] = True
             logger.info(f"User email: {user_email}")
             logger.info(f"User context: {callback_context}")
+        else:
+            state["employee_id"] = ""
+            state["country"] = ""
+            state["initialized"] = True
             
         return None
     except Exception as e:
         print("ERROR!!!",e)
         logger.error(f"Context retrieval callback failure: {e}")
         state = callback_context.state
-        state["employee_id"] = "Unknown"
-        state["country"] = "Unknown"
+        state["employee_id"] = ""
+        state["country"] = ""
         state["initialized"] = True
         return None
     

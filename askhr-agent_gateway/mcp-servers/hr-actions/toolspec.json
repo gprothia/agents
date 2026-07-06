@@ -1,0 +1,47 @@
+{
+  "tools": [
+    {
+      "name": "submit_pto_request",
+      "description": "Submit a paid-time-off request for approval. WRITE operation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "employee_id": { "type": "string" },
+          "start_date": { "type": "string" },
+          "end_date": { "type": "string" },
+          "reason": { "type": "string" }
+        },
+        "required": ["employee_id", "start_date", "end_date"]
+      },
+      "annotations": { "readOnlyHint": false }
+    },
+    {
+      "name": "update_bank_details",
+      "description": "Update direct-deposit bank account for payroll. WRITE + destructive.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "employee_id": { "type": "string" },
+          "routing_number": { "type": "string" },
+          "account_number": { "type": "string" }
+        },
+        "required": ["employee_id", "routing_number", "account_number"]
+      },
+      "annotations": { "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "file_hr_case",
+      "description": "Open an HR case (grievance, accommodation, payroll dispute). WRITE operation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "employee_id": { "type": "string" },
+          "category": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["employee_id", "category", "description"]
+      },
+      "annotations": { "readOnlyHint": false }
+    }
+  ]
+}

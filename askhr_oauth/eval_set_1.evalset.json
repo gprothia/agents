@@ -1,6 +1,296 @@
 {
   "eval_set_id": "eval_set_1",
   "name": "eval_set_1",
-  "eval_cases": [],
+  "eval_cases": [
+    {
+      "eval_id": "Leave Eval",
+      "conversation": [
+        {
+          "invocation_id": "e-e04cb293-33ac-4da3-9dab-294ff3aaf9ba",
+          "user_content": {
+            "parts": [
+              {
+                "text": "hello"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Welcome admin@prothiag.altostrat.com! I see you're based in USA. How can I help you with HR today?",
+                "thought_signature": "AY89a19onRLOKgjFWsyO9Eh9R9hxO3bN802rVSvOnli7tWM_2Ba5wNxhZWXMX_Jznw4OxZaMzkwipLGeBOudFOv6h_zSPJBAgzgslX-mfXI-2q-Lhr_NJUC_OwuT6lMRUTfFSndexIF1pQUysEyKi5bB_fFrItxVZ-ZDy19NEQ0Z6yhdJJwVNcRptaQsIFH7KTznKKUl7ORKy-tax_uQGo0nSQgweEaNkX6sJ4PrDnlKpZH6XvUZidLzxBQENa18NeDxtt308TdRahO7TaXnI4i_sboK0bknHOMnpeXqDLaNRlx2Y9SNvAcbeGFC0Pk8Tm1WympakEQwmgygXUweltwoUCHIA2vVVLs4AYu0LZmRljzOX6TVgSmdhDtmyF-C-KbUOFxz9Ho="
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1782692616.912582
+        },
+        {
+          "invocation_id": "e-1f2e5be3-0521-422e-963e-b384ada8bac3",
+          "user_content": {
+            "parts": [
+              {
+                "text": "what is my leave balance"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Your current leave balance is as follows:\n\n*   **Paid Time Off (PTO):** 20 days remaining (out of 20 total)\n*   **Sick Leave:** 2 days remaining (out of 10 total, with 8 days used)",
+                "thought_signature": "AY89a18A-9Sr3CAy9x-5YH2cboxoHDU4eT0LniR1Y6rgJMo3_XHUQE4dRRARMZxCNtzxmxJ3GbdRpsxCSok3RnADW0kos7-beiUoIxTYiQ_oxIga65RAf-m7rbeayJhdq8zeVRGbZv3-g4x2EQzVUaktB9ndgW9WtsEiy4PZ89TNwsKsjoKS8VF27IU4ihCQZE2rz5ssWQnqv1467uDUZLp6Z0G9ZXewVFsRYZPlN3V9tMTk5i5YVfYr2TKayuOM_2C57GFJFR-uM3Bmqpg9z3szbb87DXFNX0yH6znhds4Wa6zi4_4AX_xWTvF-P4iNqDAt9ZE1GK0="
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "askhr_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-5eaaef4c-71d7-4b9f-9ee5-236fc74e509c",
+                        "args": {
+                          "agent_name": "get_info_agent"
+                        },
+                        "name": "transfer_to_agent"
+                      },
+                      "thought_signature": "AY89a1_aUfid5VRgGPeBBxR7NqmhGQVSiB-y9jRjxscoQJEg5e5XQvtWruZDBrCsK97EU8tCZgV310OjKA6OhQ3BF3mONjJEg14VJG_iR_OAiqdlIFDyXTWKkNTc1IT5Hm-Lfgl3D4_ZUeuLPxQnB-K-KkCA1yrQkP7j55nAjvMp4-IgJFct-zI1HgnzN4UjX0KICNmq5G2fsUYazfXOM59l3QOvBfC29_icyBsy_AXdyLoUMtEtTdF0L72eCI-15K0d43Tf3dZjPV2phamkB20n6eXjBi1_KGtp-9Ir-1CC-sCMqbymvbEkiY2fKopYam-1Jc5oVeV_dT6HF612O3K9UZhZTogUnQ9p8NzhfU6UvbyKqy-52dTaaOBETJGCVnKPkEo9G0m4XdVtMHqywsSw5gz67NMzEz_n6iF-ktY7-WG1-BbYKH1ShadHVIagv6apmS8UXQ=="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "askhr_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-5eaaef4c-71d7-4b9f-9ee5-236fc74e509c",
+                        "name": "transfer_to_agent",
+                        "response": {
+                          "result": null
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "get_info_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-82c6df61-067d-4390-938a-c16b2e13c4d6",
+                        "args": {},
+                        "name": "get_employee_info"
+                      },
+                      "thought_signature": "AY89a1-HF0_a9yxPX4b04Zrw7KYcO-Z9CNEm7avx38CYfeFy6mQlLHEyk4gl9M-5bC_yvW51rtMP-dX5qqtqJHRz0tRpm6Xk4ZY9X-ADLRUsIa2ZOPcgod-YgRhIIWUN73LCkQ-PhQl5FPnVqTDeiqJ8NazKrg_OHlGZ8cq7rQkW7TtoJnk61yHC8yfodt5XKtySOEXzHqpfjNLKqMGxthXjbLaRiwHA3W0uUnwI9gvqL_3Rftp43Zqmn51Oojf8rwVrfbRIBfPFbFHo7-CPldRvIIwhY6Zzk7F2cxBl-hRwhgqzdkW5Qf3RdeM-p5haVnS4Q1BqczAeARLjq1FH9mh540JAJDu5UiaVNx23PrX1A4xjQwioQ_ECNiUTzBuMGLzPqL50HzALXnlDnJXDjDCrOkCvuZ8="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "get_info_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-82c6df61-067d-4390-938a-c16b2e13c4d6",
+                        "name": "get_employee_info",
+                        "response": {
+                          "employmentDetails": {
+                            "managerName": "Gautam Prothia",
+                            "jobTitle": "Engineer",
+                            "department": "Engineering",
+                            "status": "Active",
+                            "costCenter": "CC-1000",
+                            "startDate": "2023-01-01",
+                            "managerId": "200"
+                          },
+                          "personalInfo": {
+                            "lastName": "Chen",
+                            "firstName": "Emily",
+                            "contactNumber": {
+                              "mobile": "612-707-3079",
+                              "work": "+1-555-020-0100"
+                            },
+                            "address": {
+                              "zipcode": "94583",
+                              "state": "CA",
+                              "city": "San Ramon",
+                              "street": "700 Main Street",
+                              "country": "USA"
+                            }
+                          },
+                          "zipcode": "94000",
+                          "leaveBalance": {
+                            "sickDaysTotal": 10,
+                            "ptoDaysUsed": 0,
+                            "sickDaysUsed": 8,
+                            "ptoDaysTotal": 20,
+                            "ptoDaysRemaining": 20,
+                            "sickDaysRemaining": 2
+                          },
+                          "employeeId": "admin@prothiag.altostrat.com",
+                          "country": "USA"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1782692629.022579
+        },
+        {
+          "invocation_id": "e-250770e3-4640-49b0-9581-de4bb3b330db",
+          "user_content": {
+            "parts": [
+              {
+                "text": "what is leave policy"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "Based on the company's HR policies for the USA, here is an overview of the Leave Policy, which covers both Paid Time Off (PTO)/Vacation and Paid Sick Leave:\n\n### **Paid Time Off (PTO) / Vacation Policy**\n* **Accrual Schedule:** Eligible employees accrue vacation time biweekly based on their continuous years of service:\n  * **Years 1 to 5:** Accrual rate of 3.077 hours biweekly, up to a maximum of **10 days per year**.\n  * **Years 6 to 10:** Accrual rate of 4.62 hours biweekly, up to a maximum of **15 days per year**.\n* **Accrual Cap:** The total amount of accrued vacation time is capped at **twice the annual vacation allotment**. Once this cap is reached, accruals will cease and will only resume once you take vacation and the balance falls below the cap.\n* **Separation of Policies:** Employers who grant PTO should not maintain a separate vacation policy.\n\n### **Paid Sick Leave Policy**\n* **Allotment (Lump Sum Method):** Employees are provided with at least 24 hours or three days of paid sick leave per year, available for use from the beginning of the year or 12-month period.\n* **Eligibility:** \n  * **New Employees:** Entitled to three days of paid sick leave once they reach 120 days of employment, and three days per calendar year at the start of each subsequent year.\n  * **Existing Employees:** Entitled to three days of paid sick leave at the start of each calendar year.\n* **Notice Period:** For foreseeable family care or medical leave, employees must provide **30 calendar days' advance notice**.\n\n---\n\n### **Exact Verbatim Citations**\n\n> \"Employers who grant PTO should not have a separate vacation policy. In either event, in general, California employers are not required by law to provide paid vacation to their employees.\"\n> *(Source: DRAFT, Page 37)*\n\n> \"Accrual Eligible employees accrue vacation in accordance with the following scheduleix: Years of Continuous Service Rate of Accrual Date of hire through end of year 5 3.077 hours biweekly, for a maximum of 10 days per year Years 6 through 10 4.62 hours biweekly, for a maximum of 15 days per year.\"\n> *(Source: DRAFT, Page 13)*\n\n> \"The total amount of accrued vacation time may not exceed twice the annual vacation allotment. Once an employee has reached this cap, all further accruals will cease. Vacation accruals will recommence after the employee has taken vacation and the accrued vacation has dropped below the cap.\"\n> *(Source: DRAFT, Page 14)*\n\n> \"Under this lump sum method, the employer must provide at least 24 hours or three days of paid sick leave per year and the full amount of this leave must be available for the employee's use from the beginning of each year of employment, calendar year, or 12-month period.\"\n> *(Source: DRAFT, Page 38)*\n\n> \"[New employees are entitled to three days of paid sick leave once the employee reaches 120 days of employment and then three days per calendar year at the commencement of every calendar year. All existing employees are entitled to three days of paid sick leave at the commencement of every calendar year.\"\n> *(Source: DRAFT, Page 15)*\n\n> \"For foreseeable family care or medical leave, the employee must provide 30 calendar days' advance notice to [ORGANIZATION] of the need for leave.\"\n> *(Source: DRAFT, Page 23)*",
+                "thought_signature": "AY89a19OUwkZ1b0JnLut0bj2M_DldldwIM3VsSgFCCUmptVLvnfdouThjMp7W1atMbBAiz4up72KRLBXmRP-kvJlszDo3ShScd9bkzexyfArnzk354v8tcD2kmdOMDLH2gGDfs6oBALxZbJigCfxRqbOJxDmlN4xl0T0pwIuzG81W_wRugeV1zbFf2xKDcCgj7HSfYB8RyyKyYop21o5j3-aXZhOU1fADY6GU95vrfoACcE_iwWyi9_obEHWpMqqHIKX5LwHtqMLE5g6REMjHntTWM55ek9zzdPhC1niBWSipKj_xUywSkgxP0SVl8qoBt_pf4jciWso5hrQ2TwuNcbOVEXes6ruoMatBmyw8ff1bqoq6YH0Vy0UBEY243PObBgwD2NxlDEt0TLZiFNa3I-61d5xYtH8pHrltV6FqHGhmUjqCnDJB-zFKxsIvqc2qGBbuaSQXWoC7fezHt-IXZ3TfFXBMvyynBW9BAlV-ivPaY-gJpv7z9RcU726uT3Dp6ZD1dDaR1tpvpRNaL5Bw1hjd8CbUMCgefzGwoSeXR5LItqdxcGMO_d4dWyLF7zMPKDDPAx1c4VVYCUBM25iJAG7hxritEY3kXrl6m5zq_2YtUevROv7sqxvsp9ntt2-MeJ_I_nC-d-Vd1cGVXh8vWyBUSt_H_tPM3XhFt578sgVjVGKfKfLNPH6DyAhuZJpUJgv9jDLq7HjXUPHkZcGbd8geQIjLYKs0igxFv0TwcNjQAOuVjSyJDK6qd5zL8amfYF8THq5EsDRIFHAQR_zqbAeYBYiAljKig9YR-O1F0--4oHlsjqe1LdRvMCvUCRsqraRiiZz66MQ9krEUTFag3j5GmW9H9z7po3bXNXTkqE4Ft6m9c068lfO9v7D_EmTg6sL5OB39zYNmh8fBpMl0bUjZZlYDrX7fw8jWhrzb_MXO4x53Rla250Ez8GqfA7QaBIFM68hC_wqZlsafQfxAl5aJHsOzIFtAId-eSWzpVX61E3bXYDstulisaZgcLhRQEXEk3iXAsu4vgimB1lKH-9jJZ3zOeWPndaSIumaZJyYq3R2l0m0WJwWVFz-JXE1jaTT8bkvek7fLrvGR-z9zgefo167KqvoQS3wDsx6x5plFuQwVYhqTUKTLTzVWMOUS1OfUz5pRddR5WcPltx9g7d9bEKmbL_fo2lFFFqVaB-JP0zWI7DsmodRoqinSAAOe5C-Z6PtIGsbEQvRV2hWmqK64AQF8K_BOE6MHhDCqdMUO1Vo22eVyMypyVYJs-QtM885nI9GWrHWtfjzYhtsAWQ39sEhsqv5qacX2UsLFc6pujb3ZUG8pFjhtK51EGccngLGYYtEmZ7gOziVLazLX7eJAz6dMkroKlTOAPhTx5MI2jg96SkbPmYeq2uA-Dg3a43nUjo_cvM4tqRo8INsGSoC-6LToQvlY4M8I9bE4Fx96rhLxCm-vlV3Cwn2bwc4gj5fApo07QEag4Q0qxGaGvx28FP1UWr9hCcNjtJUVd1zoGlgedLwYRZIZn1z5rfE9l8o19Em3B-OCmgY4eKXt5HO54cZYNx9TsLUeKr0MGRP7Bracw7czw-G-rp-LITRSXlGCGoeaKP3vCjedXcfRiZI8Rt_hzOu1xd2-sLve4jakTAfrg9H_JQSnCbJ8ZrAnisO54v1lnOkFLPCwgODCvGi5AJxQiKr11MM4OIfm7CLdzPSh-ma1SRXEEc8_np7J5V06hraXiNeaXnqlzP25-5VbfZSnth9UsJelXZSjqPP32HX2yE52xxc29FDyl3itUw2URxr3O60EvLRH2kZTS54LNjAuyXewDDtC4d8_brr1JITCSaHskj2KEnkE7qeMyvi9q7zfVoFhTEkElFd7o-dj42KTa_u-jMejcH6TyDDCmHtUwzkbTajpafFHiOmWF0STM-EB8k3nT51-kYB6hpqLoNvMMDh_MZpUOgPiEyLoFQsVo787UyEZIGFMNEj17nLd6houKMf-o7kYZGjUjs05H0SJDXQaeZxQoIExX20kxeMeNkImw66GARS09Fqyduap-nf8QgQ-ERknupQs-GlMT_8YSmp-SfWwdowwdr9wJ6HRF2jvcYSiJaOaH170w=="
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "get_info_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-78605194-dc17-4744-b07a-0b55d1008d77",
+                        "args": {
+                          "agent_name": "policy_search_agent"
+                        },
+                        "name": "transfer_to_agent"
+                      },
+                      "thought_signature": "AY89a1_12KbuySeJGXA7YpNCbvq2P0wIu9aXvy_wyNBe6q6_GH99xkmQL57x8qUIhjNRVK2qfIdb4HjAOErJBy5bPwGZWfCAQl9w26Xsc_nkyX2havqLTVWMlmZlOZjhWYqnvnaNdNp9CmoSOkGdd7zGg5Fr9D2JZCpdlcmvj-DkdkCTlgwAoTmLDGGdh8ViTVTJxT69wbmI2rJf0UtrqXZUqstcuoGZ8IsSUqBLR6dcZqFa_14rqCKiDPMPrXx_zmvQRwbTwEmkDKuhe-zm7oQBEws_lSc49KwTU2xWxRnLilD57nGbOpGpt6GDNdS_Vk_241okIaRSIUhY4ZMqpNp8c-2j6EtRyAvASv9V4Hgbe53_brfcimT201Ddq3-28eGHLuvUTUBjTxjVjwNJdziJSpcgGQYpgVhymcOLhq_Xd0WOfmO_ndt_Skkcqb9gtCnFk-6Nms8s2BpLkA=="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "get_info_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-78605194-dc17-4744-b07a-0b55d1008d77",
+                        "name": "transfer_to_agent",
+                        "response": {
+                          "result": null
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "policy_search_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-4e6c067b-f0bd-4ec2-895e-8b89064569f2",
+                        "args": {
+                          "query": "USA leave policy"
+                        },
+                        "name": "search_hr_policy"
+                      },
+                      "thought_signature": "AY89a1-ZJz1lG4WqM4Lvni6Sb03v4CDKSdkwTMi84kLZwzkf2dWXWu6obQIyqvtvx_z9Z4zOc9s-KilU1s6YbJHF3MTjBV-csXTLgeHvl6zzv5ICllCK0tWcAZpkU2x5ujaR4u3Bb8ophMI6pDk8WLpDu13eU_7rI5z_U28Gma4QtTdYEJFFAtTQ4wynCob59KxifLbCs6fziMuGIjtCq8tCGhRKBcmjHzBfKaIltg4PVVk3cLbdEITqCIf9VfUF2lUF4Z4YB4ycuJhilwMuog-L61Al0qOVLKOy9NfutTJ3_iGZRV42E9qDpADj56gfusgdGRZhD_qLNxrhwR9IyR4OgHrTPur-hsDft-Hctb8CW8uN-fByyIvjtT4ceDDe3i9VI96uYMogFpotYcwwiCyoPZR-C3usOF8GOCwu4igQA92roEPy03SDRXR8k7dNRPLJlbzCPS_YitffcnrcNGQDeNTz6k7NYj28rXnxAWzVMokG6Lw-OZBwYRy3X7Zk1yzz-xrMw9mEZRs1jFJcAJAF-4BKK6HN3SnHPDrkSV5cgUJRJXc3ltDxmBcFAJbr9i6CPnGT3CbIP6ZBnP4wZtVccdRxjd0_9ymgkZf3_vAbubRn1L1XhEsG3OXbVgGfSFf3oinx2gCI1pONCHHJmKm4rZjv-Wtf67lhNhI7o6J-fNLSLE8qKCY2C7IWZLd00alkN85qQExKaldiPPS9_8od6zMPKkV8KwPfeb0WA4DIjqAjXa7lktk9Pkg3inWyrnkO2M5WnpImHAr4wUXeSrodEqXTh9YM9tdJQJdtQ6K75f4TXK9O-MlgWH79eH2g0adMTxqrB35d_MPr5JjvulPJERF0H1UAMuPTYA6MRuzFK0r-2aTJrtwYzI9ZrTBs1kHh7CTqhojgyzPT4ymQdyKew7kDri2nUqlbCRgdBbaEFwGvVMW3dru8kMVan5g6tj-KN1_kwY6XfEprcz7vEZ2THJpfBxoMg_QGhXocnAlJ08R3RK2NfLcox-Ty63kNTDnDxwegRtREjm2rEmfmhpxNj1rox06xvnIUSTcI9uiLwPHYzovgnRCqcoBu0lZ5oll7Xa8uoEFrRbFwWnsrGm1VY9TSbjDam3TBZsp4U8TL9I0-Y6u8kYY3_-MQuZfMxLTZsJr55HBA5pmeltiaLk1-0yf8hoYEsNy4XqfsD1NW61oeczpJUHcYwH9VQmn8o7q-_z71vDEVGoTJndCuy9sCJ3Ihv0OVwlU8d8AzLq3VubC7kcK9QINbRjh0DfyJuuyYf-0iVvdCJ449M0eubE1uCLMePpAs6wMiSBEb2xocAw9ADh6hj56j-gr0Y13XZC1xVmQGYrhUCmDQ895tL09Z5P5I_jaNo84Ty4tnV4cnu79SvQO-TfTdv-EM5a8PMxe45cr2MPQUvj8wFZSvZFmqr2Zz2zWKoaEpTKpW7J5Q1B5c36k5vpc-TwsLAL6AM9FeNlgKtukBgsNk4TsLTUIiDnpDxf4WNk6M26Re7tZo_OkxWqv0w1QXLDhjHuS2t0VqAqqN1OtcOHA2dYsBT1KSciZc9nE8XaiSsxUbxT89ybqudOFVaQJ7CjVt2DtCH9QgIzLT7K6vV3ncU6tiE9S52fZ1WrcE26FcLESaotp4_ExjF0Y-eXVE0Xd6R7OjTS3RJFL1sbd8A3xKu95okw39MROX_6I2sC-l-Owd3shX8CV9M0iL9cCDf82h6xTTMEE22ai7MSY0O_XMY50JF1QAGeHCP3OWHrOTacMXxsHrxe-Tu9FAtfWDH_mukRDj2n_21CGX_GL3GxCIcElvly-XXHcfau2Ns4Amh6j1M_rGQzVRv0PPUSYdeSMW9esk17BrRZdQxYOznIArBoP19sVCuJj1DeZ4leSJgQ1_swnkd3JhJ-W4X1nWOVBi3BMN9Q--Aq3x74zlEWx_PvWzMjdLybRJMFEvjjTUNVeNiSHUUxGG5jjK8vIqCpmd8AT1BEaq7JtzYvuoeGyIeV0kSb5TsFA0HiAhCS-MzyYIBWc47iiOno6pgRXA73Profg2_X6zy7LtNGDrRsE63Iej0b02RvxKTyr7mQiQlxaWwO8mHAwLIquKkAcAiTTeC3YXkfKCspFl9cwMJoasXbghMH903nohPkfPuNfi9Eml77UyTFYtpu-OJBQa7umVWgQnskd4_r-8NprEPT_9IZzvTQMHrS4Jb4QpWUfjsHli94TdHzm9cYqQuTK1SsceR6eoFJi8n4x5r-e4tbzDL9kWL0_a9Q9ON9pU5bHtnTljnt-iZ9aNus51-Dr_U-4PBubFZs18vN_9giQ71gAqGQ3tsb_LNg5dt4EPKFf2xTcVeWleA6MDf7H1cS7AYqAJuYXa2p4M16R6lX0eGlxclEEpoun3hoJNE_qCkJuZW9XuftL1mokIIf72lZuX_vd5fhKvipcgCbgPGqWkDshqT9oiWxh_3gdsgKk6vyRudGBhfazegGM5zB0RyxswXsWhbLBXMs1-o4tU_9vlTkNk4lnXLRrtXPPe3RLx6x2f-yXs6dtDi7hvyGJtY_HBnO_KgIlj--q9vqWPAnfDqPQ9FGLUXtU3EOHvkyeypL02of6CB5_D7G60WlIWSeBSnQ3hBeLlq_Hdj5cwqhl_gxxewWDPPVK8q2N3DSu_1-7n2aN8I26KuPDUPBRRPyzyAZ9Lvg4RX6P0dzIHiQ0cKsNv1VF2KoqJQh5AndEgJNS2r-QiSPLbcj2emgadc9Hp9mBFtZQbXbL22gesNaOPJzcoZA4A7XFASzSY1RVnT4bifY6hwMkeqQOtj-Dtua-9Js6GiFSC7tU1D_jpSORqRNoSvlFRSNGL"
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "policy_search_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-4e6c067b-f0bd-4ec2-895e-8b89064569f2",
+                        "name": "search_hr_policy",
+                        "response": {
+                          "result": "Verbatim quote: \"Under this lump sum method, the employer must provide at least 24 hours or three days of paid sick leave per year and the full amount of this leave must be available for the employee's use from the beginning of each year of employment, calendar year, or 12-month period.\"\n(Source: DRAFT, Page 38)\nVerbatim quote: \"[New employees are entitled to three days of paid sick leave once the employee reaches 120 days of employment and then three days per calendar year at the commencement of every calendar year. All existing employees are entitled to three days of paid sick leave at the commencement of every calendar year.\"\n(Source: DRAFT, Page 15)\n--- GENERATIVE SUMMARY ---\nUnder the lump sum method, employers must provide at least 24 hours or three days of paid sick leave per year [1]. This full amount of leave must be available for the employee's use from the beginning of each year of employment, calendar year, or 12-month period [1]. New employees are entitled to three days of paid sick leave once they reach 120 days of employment, and then three days per calendar year at the commencement of every calendar year [1]. Existing employees are entitled to three days of paid sick leave at the commencement of every calendar year [1]. For foreseeable family care or medical leave, employees must provide 30 calendar days' advance notice to the organization of the need for leave [1].\n\n--- EXACT VERBATIM CITATIONS ---\nVerbatim quote: \"For foreseeable family care or medical leave, the employee must provide 30 calendar days' advance notice to [ORGANIZATION] of the need for leave.\"\n(Source: DRAFT, Page 23)"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              },
+              {
+                "author": "policy_search_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "adk-823103f0-3e94-48f4-b45e-6edd66b52933",
+                        "args": {
+                          "query": "USA PTO vacation policy"
+                        },
+                        "name": "search_hr_policy"
+                      },
+                      "thought_signature": "AY89a1_s7V2njVjphvQ94yHTtNi1oQ6gmD-ts27S_XHuRjQry1fep4stWonninS2jhBZ8pdgENSIoB7Qc-lo7aM1srJPCJsknKB4d9Bw5VuaHe6Zav8OadSM3NUA3tiigJFctHRX0uuRhAJpsIjxLlIxK5d8ajA0CMMM7me5YwEXyjcS62zdPRlgUompIavbWK5wpTmlmHNVm-H5hUGWK9c5sqeCLfx17czwS5J2Iam90ETJjrHCqz3eoNf3gdAnU9QlLwEz28JFzuc_1sTjthTYoTpn5R94M-BUu_7Af3UPS0Y2Rs7d_In5zF5mQivSHLDvdyE0_F-B7KN4TrbpJ3E2LFjwN2H5hZ2rVTNeJZrlUNutxJDpED-u6Eodwk3bcNsHuFXVNPET0BEtvqKTGUfm4jhBz_vhcXyBMDbUrUIZDrM3koAfOseGmnRfHbu1jR_FxHAsyfmCSdQY_wU67rJfDRI9oJENzNEtyCKFW2U-wpcECQ0zaW4GQdRMdZNNVvL2VrKP4FXhKoBq-uxk7UIpfWjjejehpDygg1MPy8i-RcTenhdxQguBN2vZ5zWd0htXX8lc5YN1uCa9GoohotD_T5a4qH8wTZLoHM9JUIsqDbyViIdMJ2aY4Gcidb4BXWZSxe-IVpEZxLeT4P55hdKQbo8gGtE-slVcVAB8IsgC_EnPIBbkZu4RO3iRoRon4WtWX77BKsFSfBJgGjYI9Gr3VIUJ8FVDWmfXGzeQPrqdcV5ocnvdJh03vCzD64-qn9JNcv4uGuyBl1qzzHG_5-qmbhRK6OgO7mqm7L0R-m-F-JnE29fWSuL4zQaGJdDuBFhyX2UewxKL2ByYNFAIRH_0s0TGYvO2rWk0oWihBlMtCz-BwRZJ-EHqO_yENLqs4UJh2AlRHoXcNOCdQ3WM7DgBJ8rrz9vhQru6TOs3nFhC0eWxYn036zKUieNEjWfXe084UEp1hbVMpURjrn9ysEL0AIP5C3SbGlSNhxHHvkrlWlQo7y73kVW5u0ca6rr7UTHtn4DZuQQV1ZJhUCvxjC_o3B9WJpGbqdfmPgly5MqtFgy1szVNjZLwN8fR6zwjf2Vo4r-DjH8U_gNWkl2S7eK-z8YPiqzpkJBvVgXwRk5vnAK5tvJNRBdwvvRZ5ByD85zeqn_FAHFEG7x-5dH_pYXf4MVfZ-t2oA=="
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "policy_search_agent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "adk-823103f0-3e94-48f4-b45e-6edd66b52933",
+                        "name": "search_hr_policy",
+                        "response": {
+                          "result": "--- GENERATIVE SUMMARY ---\nEligible employees accrue vacation time based on their years of continuous service [1]. For the first five years of employment, employees accrue 3.077 hours biweekly, which amounts to a maximum of 10 days per year [1]. From year six through year ten, the accrual rate increases to 4.62 hours biweekly, allowing for a maximum of 15 days per year [1].\n\nThe total amount of accrued vacation time is capped at twice the annual vacation allotment [1]. Once an employee reaches this cap, further accruals will cease [1]. Accruals will resume once the employee takes vacation time and their accrued balance falls below the cap [1].\n\nIn general, California employers are not legally required to provide paid vacation to their employees [1]. If employers grant Paid Time Off (PTO), they should not have a separate vacation policy [1].\n\n--- EXACT VERBATIM CITATIONS ---\nVerbatim quote: \"Employers who grant PTO should not have a separate vacation policy. In either event, in general, California employers are not required by law to provide paid vacation to their employees.\"\n(Source: DRAFT, Page 37)\nVerbatim quote: \"Accrual Eligible employees accrue vacation in accordance with the following scheduleix: Years of Continuous Service Rate of Accrual Date of hire through end of year 5 3.077 hours biweekly, for a maximum of 10 days per year Years 6 through 10 4.62 hours biweekly, for a maximum of 15 days per year.\"\n(Source: DRAFT, Page 13)\nVerbatim quote: \"The total amount of accrued vacation time may not exceed twice the annual vacation allotment. Once an employee has reached this cap, all further accruals will cease. Vacation accruals will recommence after the employee has taken vacation and the accrued vacation has dropped below the cap.\"\n(Source: DRAFT, Page 14)"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1782692649.399283
+        }
+      ],
+      "session_input": {
+        "app_name": "askhr_oauth",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1782692704.792585
+    }
+  ],
   "creation_timestamp": 1782691548.164435
 }
