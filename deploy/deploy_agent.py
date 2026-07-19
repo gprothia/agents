@@ -64,11 +64,14 @@ PACKAGE_DIR = "askhr_oauth"
 
 # Default requirements if no requirements.txt is found next to this script.
 DEFAULT_REQUIREMENTS = [
-    "google-adk>=1.27.4",
-    "google-cloud-aiplatform[adk,agent_engines]",
+    "google-adk>=2.4",
+    "google-cloud-aiplatform[adk,agent_engines]>=1.126.1",
     "google-cloud-discoveryengine",
     "python-dotenv",
     "requests",
+    "opentelemetry-exporter-gcp-trace",
+    "opentelemetry-sdk",
+    "google-cloud-trace"
 ]
 
 
@@ -161,7 +164,9 @@ def main() -> None:
     "AUTH_ID": os.environ["AUTH_ID"],
     "EMPLOYEE_API_URL": os.environ["EMPLOYEE_API_URL"],
     "VERTEX_SEARCH_APP_ID": os.environ["VERTEX_SEARCH_APP_ID"],
-    # ...whatever else your agent reads at runtime
+    "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
+    "GOOGLE_CLOUD_TRACING_ENABLE": "true",
+    "GOOGLE_CLOUD_TRACING_DEBUG": "true"
 }
     print("env_vars: ", env_vars)
     if args.agent_id:

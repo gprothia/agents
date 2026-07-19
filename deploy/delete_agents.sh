@@ -1,3 +1,4 @@
+
 export MyProjectId="bold-kit-384717"
 export MyProjectNumber="851970768145" # Used if you registered Auth with Project Number
 export MyLocation="global" # Can also be 'us' or 'eu'
@@ -7,8 +8,9 @@ export MyEndpoint="${MyLocation}-discoveryengine.googleapis.com"
 export MyToken=$(gcloud auth print-access-token)
 
 
+export MyAgentId="7382045066049473446"
 
 curl -X DELETE \
   -H "Authorization: Bearer ${MyToken}" \
-  -H "X-Goog-User-Project: ${MyProjectId}" \
-  "https://${MyEndpoint}/v1alpha/projects/${MyProjectNumber}/locations/${MyLocation}/authorizations/${MyAuthId}"
+  "https://${MyEndpoint}/v1alpha/projects/${MyProjectId}/locations/${MyLocation}/collections/default_collection/engines/${MyAppId}/assistants/default_assistant/agents/${MyAgentId}"
+

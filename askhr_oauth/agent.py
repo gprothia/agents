@@ -1,12 +1,16 @@
-import os
+import os,re
 from dotenv import load_dotenv # <--- Added to load environment variables from .env file
 from google.adk import Agent
+from google.adk.apps import App
+
 
 load_dotenv() # <--- Added to load environment variables from .env file
+print(os.getenv("GOOGLE_GENAI_USE_VERTEXAI"), os.getenv("GOOGLE_CLOUD_PROJECT"))
 from google.adk.tools.agent_tool import AgentTool
 
 # Monkey-patch AgentTool to fix missing attribute bug in some ADK versions
 AgentTool.propagate_grounding_metadata = False
+
 
 from .prompts import (
     ROOT_AGENT_INSTRUCTION,
@@ -22,7 +26,7 @@ from .tools import (
     get_user_context
 )
 
-MODEL = os.getenv("MODEL", "gemini-2.5-flash")
+MODEL = os.getenv("MODEL", "gemini-3.5-flash")
 
 
 # Sub-Agent 1: Policy Search Agent
@@ -66,5 +70,6 @@ root_agent = Agent(
     model=MODEL
 )
 
+#app = App(name="askhr", root_agent=root_agent, plugins=[BillingLabelPlugin()])
 app = root_agent
 #testcommit

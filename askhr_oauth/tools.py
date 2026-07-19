@@ -22,14 +22,18 @@ def get_email_from_oauth_token(token:str) -> str:
     """
     
     # 1. Robust token extraction (Context -> Environment Fallback)
+    logger.info(f"Token: {token}")
     credentials = Credentials(token=token)
+    logger.info(f"Credentials: {credentials}")
     service = build("oauth2","v2",credentials=credentials)
+    logger.info(f"Service: {service}")
     userinfo = service.userinfo().get().execute()
+    logger.info(f"Userinfo: {userinfo}")
     user_email = userinfo.get("email") 
     if user_email: # if null then return "[EMAIL_ADDRESS]"  
         return user_email
     else:
-        return "admin@prothiag.altostrat.com"
+        return "admin_null@prothiag.altostrat.com"
 
 def debug_identity(callback_context) -> dict:
     data = callback_context.state.to_dict()      # <-- materialize the dict
@@ -63,17 +67,19 @@ def get_user_context(callback_context, **kwargs):
             logger.info(f"User email: {user_email}")
             logger.info(f"User context: {callback_context}")
         else:
-            state["employee_id"] = ""
-            state["country"] = ""
+            state["employee_id"] = "admin_notoken@prothiag.altostrat.com"
+            state["country"] = "USA"
             state["initialized"] = True
             
         return None
     except Exception as e:
         print("ERROR!!!",e)
         logger.error(f"Context retrieval callback failure: {e}")
+        logger.error(f"Auth id {auth_client_id}")
+        logger.error(f"Token {token}")
         state = callback_context.state
-        state["employee_id"] = ""
-        state["country"] = ""
+        state["employee_id"] = "admin_error@prothiag.altostrat.com"
+        state["country"] = "USA"
         state["initialized"] = True
         return None
     

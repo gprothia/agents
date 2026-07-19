@@ -6,9 +6,9 @@ export MyAuthId="askhrauth_1" # The ID of the Authorization config to delete
 export MyEndpoint="${MyLocation}-discoveryengine.googleapis.com"
 export MyToken=$(gcloud auth print-access-token)
 
-
-
-curl -X DELETE \
+curl -s -X GET \
   -H "Authorization: Bearer ${MyToken}" \
   -H "X-Goog-User-Project: ${MyProjectId}" \
-  "https://${MyEndpoint}/v1alpha/projects/${MyProjectNumber}/locations/${MyLocation}/authorizations/${MyAuthId}"
+  "https://${MyEndpoint}/v1alpha/projects/${MyProjectId}/locations/${MyLocation}/collections/default_collection/engines/${MyAppId}/assistants/default_assistant/agents"
+
+
