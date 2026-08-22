@@ -1,0 +1,8 @@
+{
+  "scenarios": [
+    {
+      "starting_prompt": "Hi, I need help with a recent order.",
+      "conversation_plan": "You are customer CUST001. First ask the agent to look up your purchase history. Then ask for a refund on the wireless headphones (order ORD-101) because it arrived damaged. Give the order ID and the reason when the agent asks."
+    }
+  ]
+}

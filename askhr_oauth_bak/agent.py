@@ -24,7 +24,7 @@ from .tools import (
     get_user_context
 )
 
-MODEL = os.getenv("MODEL", "gemini-2.5-flash")
+MODEL = os.getenv("MODEL", "gemini-3.5-flash")
 
 
 # Sub-Agent 1: Policy Search Agent

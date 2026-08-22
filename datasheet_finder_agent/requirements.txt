@@ -1,0 +1,5 @@
+google-adk>=2.4.0
+google-genai
+google-cloud-aiplatform
+python-dotenv
+requests

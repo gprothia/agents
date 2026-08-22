@@ -166,7 +166,9 @@ def main() -> None:
     "VERTEX_SEARCH_APP_ID": os.environ["VERTEX_SEARCH_APP_ID"],
     "GOOGLE_CLOUD_AGENT_ENGINE_ENABLE_TELEMETRY": "true",
     "GOOGLE_CLOUD_TRACING_ENABLE": "true",
-    "GOOGLE_CLOUD_TRACING_DEBUG": "true"
+    "GOOGLE_CLOUD_TRACING_DEBUG": "true",
+    "OTEL_SEMCONV_STABILITY_OPT_IN": "gen_ai_latest_experimental",
+    "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT": "EVENT_ONLY"
 }
     print("env_vars: ", env_vars)
     if args.agent_id:

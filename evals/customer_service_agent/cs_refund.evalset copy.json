@@ -1,0 +1,101 @@
+{
+  "eval_set_id": "cs_refund",
+  "name": "cs_refund",
+  "eval_cases": [
+    {
+      "eval_id": "refund_damaged_item",
+      "conversation": [
+        {
+          "invocation_id": "r-1",
+          "user_content": {
+            "parts": [
+              {
+                "text": "I'd like a refund for order ORD-101."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "I can help with that. What is the reason for the refund on order ORD-101?"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 5
+        },
+        {
+          "invocation_id": "r-2",
+          "user_content": {
+            "parts": [
+              {
+                "text": "It arrived damaged."
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "I've processed a full refund of $120.00 for order ORD-101 due to: damaged."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "customer_service_agent",
+                "content": {
+                  "role": "model",
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "fc-r",
+                        "name": "issue_refund",
+                        "args": {
+                          "order_id": "ORD-101",
+                          "reason": "damaged"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "author": "customer_service_agent",
+                "content": {
+                  "role": "user",
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "fc-r",
+                        "name": "issue_refund",
+                        "response": {
+                          "status": "success",
+                          "order_id": "ORD-101",
+                          "new_status": "refunded",
+                          "refund_amount": "Full refund of $120.0 processed",
+                          "message": "Refund issued for order ORD-101 due to: damaged"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 6
+        }
+      ],
+      "session_input": {
+        "app_name": "customer_service_agent_v1",
+        "user_id": "user"
+      },
+      "creation_timestamp": 7
+    }
+  ],
+  "creation_timestamp": 8
+}

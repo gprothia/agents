@@ -1,8 +1,0 @@
-# Terraform staging directories (generated during apply)
-staging/
-
-# Generated proxy bundles
-*.zip
-
-.terraform/
-.terraform.lock.hcl

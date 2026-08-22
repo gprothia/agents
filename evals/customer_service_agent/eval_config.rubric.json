@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "rubric_based_final_response_quality_v1": {
+      "threshold": 0.8,
+      "judge_model_options": {
+        "judge_model": "gemini-3.5-flash",
+        "num_samples": 5
+      },
+      "rubrics": [
+        {
+          "rubric_id": "conciseness",
+          "rubric_content": {
+            "text_property": "The response is direct and concise, without unnecessary detail."
+          }
+        },
+        {
+          "rubric_id": "completeness",
+          "rubric_content": {
+            "text_property": "The response fully answers the customer's request, including the relevant order details."
+          }
+        }
+      ]
+    }
+  }
+}

@@ -8,7 +8,7 @@ export MyEndpoint="${MyLocation}-discoveryengine.googleapis.com"
 export MyToken=$(gcloud auth print-access-token)
 
 
-export MyAgentId="7382045066049473446"
+export MyAgentId="8036390410798497792"
 
 curl -X DELETE \
   -H "Authorization: Bearer ${MyToken}" \

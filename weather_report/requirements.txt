@@ -1,5 +1,3 @@
-google-cloud-discoveryengine
-google-api-python-client
 google-adk>=2.4.0
 google-cloud-aiplatform[adk,agent_engines]>=1.126.1
 requests
