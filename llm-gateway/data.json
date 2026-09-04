@@ -1,0 +1,14 @@
+{
+    "instances": [
+        {
+          "@requestFormat": "chatCompletions",
+          "messages": [
+              {
+                  "role": "user",
+                  "content": "What is machine learning?"
+              }
+          ],
+          "max_tokens": 100
+        }
+    ]
+}

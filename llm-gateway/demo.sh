@@ -7,7 +7,7 @@ curl -sk https://$GATEWAY/v1/health
 # 2.1 Google Gemini 2.5 Flash (Vertex AI)
 curl -sk -X POST https://$GATEWAY/v1/chat/completions \
   -H "x-api-key: $API_KEY" -H "Content-Type: application/json" \
-  -d '{"model":"gemini-2.5-flash-lite","messages":[{"role":"user","content":"In one sentence: what is FNV-1a hash?"}],"max_tokens":80}' | jq '.choices[0].message.content'
+  -d '{"model":"gemini-2.5-flash-lite","messages":[{"role":"user","content":"In one sentence: what is FNV-1a hash?"}],"max_tokens":80}' | jq 
 
 # 2.2 Anthropic Claude Sonnet 4.6 — strong reasoning, allowed in demo
 curl -sk -X POST https://$GATEWAY/v1/chat/completions \

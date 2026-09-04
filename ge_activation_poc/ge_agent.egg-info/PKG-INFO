@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: ge-agent
+Version: 0.1.0
+Summary: GE Activation Agent
+Requires-Dist: openpyxl>=3.1.5
+Requires-Dist: python-dotenv>=1.0.0
