@@ -3,66 +3,159 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A2UI demo — GE Activation Agent</title>
+<title>A2UI Full Interactive Viewer — GE Activation Agent</title>
 <style>
   :root{ --blue:#4285F4; --blueD:#1967D2; --green:#34A853; --red:#EA4335;
          --ink:#202124; --grey:#5f6368; --line:#e8eaed; --bg:#f8f9fa; }
   *{ box-sizing:border-box; }
-  body{ font-family:Arial,Helvetica,sans-serif; color:var(--ink); margin:0; background:#fff; }
-  header{ padding:20px 28px; border-bottom:1px solid var(--line); }
+  body{ font-family:Inter,-apple-system,BlinkMacSystemFont,Arial,sans-serif; color:var(--ink); margin:0; background:var(--bg); }
+  header{ padding:20px 28px; background:#fff; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
   header h1{ font-size:18px; margin:0; }
   header p{ margin:4px 0 0; color:var(--grey); font-size:13px; }
-  main{ max-width:820px; margin:24px auto; padding:0 20px; }
-  textarea{ width:100%; height:150px; font-family:ui-monospace,Menlo,Consolas,monospace;
-            font-size:12px; border:1px solid var(--line); border-radius:8px; padding:10px; }
+  main{ max-width:860px; margin:24px auto; padding:0 20px; }
+  .presets{ display:flex; gap:8px; margin-bottom:10px; }
+  .presets button{ background:#fff; border:1px solid var(--line); border-radius:6px; padding:6px 12px; font-size:12px; cursor:pointer; font-weight:600; color:var(--ink); }
+  .presets button:hover{ border-color:var(--blue); color:var(--blue); }
+  textarea{ width:100%; height:130px; font-family:ui-monospace,Menlo,Consolas,monospace;
+            font-size:12px; border:1px solid var(--line); border-radius:8px; padding:10px; background:#fff; }
   button.load{ margin:10px 0 24px; background:var(--blue); color:#fff; border:0;
                border-radius:6px; padding:9px 16px; font-weight:700; cursor:pointer; }
-  .card{ border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:14px 0;
-         box-shadow:0 1px 3px rgba(0,0,0,.06); }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin:14px 0;
+         box-shadow:0 2px 6px rgba(0,0,0,.04); }
   .oneway{ display:inline-block; background:#fef7e0; color:#b06000; font-weight:700;
-           font-size:11px; padding:3px 10px; border-radius:10px; margin-bottom:8px; }
-  .card h2{ font-size:19px; margin:2px 0 4px; }
-  .sum{ color:var(--grey); margin:0 0 12px; }
-  .lab{ font-size:11px; letter-spacing:1px; color:var(--grey); font-weight:700; margin:12px 0 4px; }
+           font-size:11px; padding:4px 10px; border-radius:10px; margin-bottom:10px; }
+  .saved-badge{ display:inline-block; background:#e6f4ea; color:#137333; font-weight:700;
+                font-size:11px; padding:4px 10px; border-radius:10px; margin-bottom:10px; }
+  .card h2{ font-size:19px; margin:2px 0 6px; }
+  .sum{ color:var(--grey); margin:0 0 14px; font-size:14px; }
+  .lab{ font-size:11px; letter-spacing:1px; color:var(--grey); font-weight:700; margin:14px 0 6px; text-transform:uppercase; }
   ul{ margin:4px 0; padding-left:2px; list-style:none; }
-  li{ margin:4px 0; padding-left:22px; position:relative; font-size:14px; }
+  li{ margin:6px 0; padding-left:22px; position:relative; font-size:14px; line-height:1.4; }
   li.pro::before{ content:"✓"; color:var(--green); position:absolute; left:0; font-weight:800; }
-  li.warn::before{ content:"•"; color:#b06000; position:absolute; left:2px; font-weight:800; font-size:18px; line-height:14px;}
-  .src{ font-size:12px; color:var(--grey); margin-top:10px; }
-  .row{ display:flex; gap:10px; margin-top:14px; }
-  .row button{ border-radius:6px; padding:9px 16px; font-weight:700; cursor:pointer; font-size:13px; }
+  li.warn::before{ content:"!"; color:#b06000; position:absolute; left:4px; font-weight:800; }
+  .src{ font-size:12px; color:var(--grey); margin-top:12px; }
+  .row{ display:flex; gap:10px; margin-top:18px; }
+  .row button{ border-radius:6px; padding:9px 18px; font-weight:700; cursor:pointer; font-size:13px; }
   .btn-approve{ background:var(--blue); color:#fff; border:0; }
   .btn-adjust{ background:#fff; color:var(--blue); border:1px solid var(--line); }
+  .q-block{ margin:16px 0; padding:14px; border:1px solid var(--line); border-radius:8px; background:var(--bg); }
+  .q-title{ font-weight:600; font-size:14px; margin-bottom:10px; }
+  .q-opt{ display:flex; align-items:center; gap:8px; margin:6px 0; font-size:13px; cursor:pointer; }
 </style>
 </head>
 <body>
 <header>
-  <h1>A2UI demo — GE Activation Agent</h1>
-  <p>Paste the JSONL that <code>build_recommendation_ui</code> / <code>run_simulated.py</code> emits, then Render. This is the POC-grade viewer for the subset of A2UI used here.</p>
+  <div>
+    <h1>A2UI Full Renderer — GE Activation Agent</h1>
+    <p>Renders 100% of agent turns as UI: <b>Discovery Forms</b>, <b>Recommendation Cards</b>, and <b>Decision Confirmation Cards</b>.</p>
+  </div>
 </header>
 <main>
+  <div class="presets">
+    <button onclick="loadPreset('discovery')">1. Load Discovery Form (A2UI)</button>
+    <button onclick="loadPreset('recommendation')">2. Load Recommendation Card (A2UI)</button>
+    <button onclick="loadPreset('decision')">3. Load Decision Saved Card (A2UI)</button>
+  </div>
   <textarea id="src" spellcheck="false"></textarea>
-  <button class="load" onclick="render()">Render surface</button>
+  <button class="load" onclick="render()">Render A2UI Surface</button>
   <div id="out"></div>
 </main>
 
 <script>
-// A tiny interpreter for the A2UI subset used in this POC.
-const SAMPLE = `{"surfaceUpdate":{"surfaceId":"recommendation","components":[{"id":"card","component":{"RecommendationCard":{"title":{"path":"/rec/title"},"summary":{"path":"/rec/summary"},"one_way":{"path":"/rec/one_way"},"pros":{"path":"/rec/pros"},"watchouts":{"path":"/rec/watchouts"},"rationale":{"path":"/rec/rationale"},"source_url":{"path":"/rec/source_url"}}}}]}}
-{"dataModelUpdate":{"surfaceId":"recommendation","path":"/rec","contents":{"title":"Region eu + CMEK","summary":"Data in 'eu', customer-managed (CMEK) encryption","one_way":true,"pros":["Meets EU data residency (GDPR)","You control the keys; supports third-party connectors"],"watchouts":["Region cannot be changed after data stores exist","Key cannot be swapped once applied; all connectors share one CMEK config","Cloud KMS billed continuously once registered"],"rationale":"Residency + key-control requirements","source_url":"https://docs.cloud.google.com/gemini/enterprise/docs/cmek"}}}
-{"beginRendering":{"surfaceId":"recommendation","root":"card"}}`;
+const PRESETS = {
+  discovery: `{"surfaceUpdate":{"surfaceId":"discovery","components":[{"id":"root","component":{"Column":{"children":{"explicitList":["title","q0","q1","submit"]}}}},{"id":"title","component":{"Text":{"text":{"literalString":"Infrastructure Setup · a few questions"},"usageHint":"h2"}}},{"id":"q0","component":{"MultipleChoice":{"label":{"literalString":"Where must your Gemini Enterprise data live?"},"selections":{"path":"/answers/residency"},"maxAllowedSelections":1,"options":[{"label":{"literalString":"European Union (EU)"},"value":"eu"},{"label":{"literalString":"United States (US)"},"value":"us"},{"label":{"literalString":"No strict residency requirement"},"value":"none"}]}}},{"id":"q1","component":{"MultipleChoice":{"label":{"literalString":"How should your data be encrypted?"},"selections":{"path":"/answers/encryption"},"maxAllowedSelections":1,"options":[{"label":{"literalString":"Customer-Managed Encryption Keys (CMEK)"},"value":"cmek"},{"label":{"literalString":"Google-Managed Encryption Keys (GMEK)"},"value":"gmek"}]}}},{"id":"submit","component":{"Button":{"child":"submit_t","primary":true,"action":{"name":"discovery.submit","context":[{"key":"answers","value":{"path":"/answers"}}]}}}},{"id":"submit_t","component":{"Text":{"text":{"literalString":"Continue"}}}}]}}
+{"beginRendering":{"surfaceId":"discovery","root":"root"}}`,
 
-document.getElementById('src').value = SAMPLE;
+  recommendation: `{"surfaceUpdate":{"surfaceId":"recommendation","components":[{"id":"card","component":{"RecommendationCard":{"title":{"path":"/rec/title"},"summary":{"path":"/rec/summary"},"one_way":{"path":"/rec/one_way"},"pros":{"path":"/rec/pros"},"watchouts":{"path":"/rec/watchouts"},"rationale":{"path":"/rec/rationale"},"source_url":{"path":"/rec/source_url"}}}}]}}
+{"dataModelUpdate":{"surfaceId":"recommendation","path":"/rec","contents":{"title":"Region eu + CMEK","summary":"Data in 'eu', customer-managed (CMEK) encryption","one_way":true,"pros":["Meets EU data residency (GDPR)","You control the keys; supports third-party connectors"],"watchouts":["Region cannot be changed after data stores exist","Key cannot be swapped once applied; all connectors share one CMEK config","Cloud KMS billed continuously once registered"],"rationale":"Residency + key-control requirements","source_url":"https://docs.cloud.google.com/gemini/enterprise/docs/cmek"}}}
+{"beginRendering":{"surfaceId":"recommendation","root":"card"}}`,
+
+  decision: `{"surfaceUpdate":{"surfaceId":"decision","components":[{"id":"root","component":{"Card":{"child":"col"}}},{"id":"col","component":{"Column":{"children":{"explicitList":["h","sub","meta"]}}}},{"id":"h","component":{"Text":{"text":{"literalString":"Saved to the plan sheet"},"usageHint":"h2"}}},{"id":"sub","component":{"Text":{"text":{"literalString":"Region eu + CMEK"}}}},{"id":"meta","component":{"Text":{"text":{"literalString":"DEC-001 · status: saved · ready for the deploy agent"},"usageHint":"caption"}}}]}}
+{"beginRendering":{"surfaceId":"decision","root":"root"}}`
+};
+
+function loadPreset(name) {
+  document.getElementById('src').value = PRESETS[name];
+  render();
+}
 
 function render(){
-  const lines = document.getElementById('src').value.trim().split(/\r?\n/);
+  const raw = document.getElementById('src').value.trim();
+  const lines = raw.replace(/```a2ui|```/g, '').trim().split(/\r?\n/);
+  let surfaceId = '';
+  let components = [];
   let data = {};
+
   for(const ln of lines){
     let msg; try{ msg = JSON.parse(ln); }catch(e){ continue; }
-    if(msg.dataModelUpdate){ data = msg.dataModelUpdate.contents || data; }
+    if(msg.surfaceUpdate){
+      surfaceId = msg.surfaceUpdate.surfaceId;
+      components = msg.surfaceUpdate.components || [];
+    }
+    if(msg.dataModelUpdate){
+      data = msg.dataModelUpdate.contents || data;
+    }
   }
+
   const out = document.getElementById('out');
   out.innerHTML = '';
+
+  // 1. Render Discovery Form Surface
+  if(surfaceId === 'discovery'){
+    const c = document.createElement('div'); c.className='card';
+    const titleComp = components.find(x => x.id === 'title');
+    if(titleComp && titleComp.component.Text){
+      const h = document.createElement('h2');
+      h.textContent = titleComp.component.Text.text.literalString;
+      c.appendChild(h);
+    }
+    components.filter(x => x.component && x.component.MultipleChoice).forEach((q, idx) => {
+      const mc = q.component.MultipleChoice;
+      const qb = document.createElement('div'); qb.className='q-block';
+      const qt = document.createElement('div'); qt.className='q-title';
+      qt.textContent = mc.label.literalString;
+      qb.appendChild(qt);
+      (mc.options || []).forEach((opt, oidx) => {
+        const lbl = document.createElement('label'); lbl.className='q-opt';
+        const inp = document.createElement('input');
+        inp.type = mc.maxAllowedSelections === 1 ? 'radio' : 'checkbox';
+        inp.name = 'q_' + idx;
+        inp.value = opt.value;
+        if(oidx === 0) inp.checked = true;
+        lbl.appendChild(inp);
+        lbl.appendChild(document.createTextNode(opt.label.literalString));
+        qb.appendChild(lbl);
+      });
+      c.appendChild(qb);
+    });
+    const row = document.createElement('div'); row.className='row';
+    const btn = document.createElement('button'); btn.className='btn-approve';
+    btn.textContent = 'Continue →';
+    btn.onclick = () => {
+      alert('Emitting discovery.submit action with selected answers to Agent → Agent calls recommend_infra_config()');
+      loadPreset('recommendation');
+    };
+    row.appendChild(btn); c.appendChild(row);
+    out.appendChild(c);
+    return;
+  }
+
+  // 2. Render Decision Saved Confirmation Surface
+  if(surfaceId === 'decision'){
+    const c = document.createElement('div'); c.className='card';
+    const b = document.createElement('div'); b.className='saved-badge'; b.textContent='✓ PLAN SHEET UPDATED';
+    c.appendChild(b);
+    const hComp = components.find(x => x.id === 'h');
+    const subComp = components.find(x => x.id === 'sub');
+    const metaComp = components.find(x => x.id === 'meta');
+    if(hComp){ const h=document.createElement('h2'); h.textContent=hComp.component.Text.text.literalString; c.appendChild(h); }
+    if(subComp){ const p=document.createElement('p'); p.className='sum'; p.textContent=subComp.component.Text.text.literalString; c.appendChild(p); }
+    if(metaComp){ const m=document.createElement('div'); m.className='src'; m.textContent=metaComp.component.Text.text.literalString; c.appendChild(m); }
+    out.appendChild(c);
+    return;
+  }
+
+  // 3. Render Recommendation Card Surface
   const c = document.createElement('div'); c.className='card';
   if(data.one_way){ const b=document.createElement('div'); b.className='oneway'; b.textContent='ONE-WAY DECISION'; c.appendChild(b); }
   const h=document.createElement('h2'); h.textContent=data.title||''; c.appendChild(h);
@@ -73,11 +166,16 @@ function render(){
   if(data.source_url){ const u=document.createElement('p'); u.className='src'; u.innerHTML='Source: <a href="'+data.source_url+'" target="_blank" rel="noopener">'+data.source_url+'</a>'; c.appendChild(u); }
   const row=document.createElement('div'); row.className='row';
   const adj=document.createElement('button'); adj.className='btn-adjust'; adj.textContent='Adjust';
+  adj.onclick=()=>loadPreset('discovery');
   const app=document.createElement('button'); app.className='btn-approve'; app.textContent=data.one_way?'Approve (one-way)':'Approve & save';
-  app.onclick=()=>alert('In the live agent this emits recommendation.approve → save_decision → plan.xlsx');
+  app.onclick=()=>{
+    alert('Emitting recommendation.approve action → Agent calls save_decision()');
+    loadPreset('decision');
+  };
   row.appendChild(adj); row.appendChild(app); c.appendChild(row);
   out.appendChild(c);
 }
+
 function list(label, items, cls){
   const wrap=document.createElement('div');
   const l=document.createElement('div'); l.className='lab'; l.textContent=label; wrap.appendChild(l);
@@ -85,7 +183,8 @@ function list(label, items, cls){
   (items||[]).forEach(t=>{ const li=document.createElement('li'); li.className=cls; li.textContent=t; ul.appendChild(li); });
   wrap.appendChild(ul); return wrap;
 }
-render();
+
+loadPreset('discovery');
 </script>
 </body>
 </html>

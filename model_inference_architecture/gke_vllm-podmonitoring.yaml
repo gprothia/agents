@@ -1,0 +1,12 @@
+apiVersion: monitoring.googleapis.com/v1
+kind: PodMonitoring
+metadata:
+  name: vllm-metrics
+spec:
+  selector:
+    matchLabels:
+      app: gemma-vllm
+  endpoints:
+  - port: 8000
+    path: /metrics
+    interval: 30s

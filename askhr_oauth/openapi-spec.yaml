@@ -1,0 +1,62 @@
+swagger: "2.0"
+info:
+  title: Employee HR API Gateway
+  description: API Gateway specification for Employee HR Cloud Run service
+  version: "1.0.0"
+schemes:
+  - https
+produces:
+  - application/json
+x-google-backend:
+  address: https://employee-api-851970768145.us-central1.run.app
+  path_translation: APPEND_PATH_TO_ADDRESS
+paths:
+  /employee/{employee_id}:
+    get:
+      summary: Get employee information
+      description: Fetch employee information from the HR database by employee ID
+      operationId: getEmployeeInfo
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: string
+          description: The email or ID of the employee
+      responses:
+        "200":
+          description: Employee information retrieved successfully
+          schema:
+            type: object
+        "404":
+          description: Employee ID not found
+  /employee/{employee_id}/update:
+    post:
+      summary: Update employee information
+      description: Update a specific field in the employee's HR profile
+      operationId: updateEmployeeInfo
+      consumes:
+        - application/json
+      parameters:
+        - name: employee_id
+          in: path
+          required: true
+          type: string
+          description: The email or ID of the employee
+        - name: body
+          in: body
+          required: true
+          description: Field update payload
+          schema:
+            type: object
+            properties:
+              field_to_update:
+                type: string
+              new_value:
+                type: string
+      responses:
+        "200":
+          description: Employee information updated successfully
+          schema:
+            type: object
+        "404":
+          description: Employee ID not found

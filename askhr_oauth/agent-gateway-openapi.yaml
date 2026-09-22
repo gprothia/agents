@@ -1,0 +1,40 @@
+swagger: "2.0"
+info:
+  title: AskHR Agent Gateway
+  description: API Gateway specification for AskHR Vertex AI Agent Engine
+  version: "1.0.0"
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /v1/projects/bold-kit-384717/locations/us-central1/reasoningEngines/9119506121181102080:query:
+    post:
+      summary: Query the AskHR Agent Engine
+      operationId: queryAgentEngine
+      x-google-backend:
+        address: https://us-central1-aiplatform.googleapis.com/v1/projects/851970768145/locations/us-central1/reasoningEngines/9119506121181102080:query
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+      responses:
+        "200":
+          description: Successful response
+  /v1/projects/bold-kit-384717/locations/us-central1/reasoningEngines/9119506121181102080:streamQuery:
+    post:
+      summary: Stream query responses from the AskHR Agent Engine
+      operationId: streamQueryAgentEngine
+      x-google-backend:
+        address: https://us-central1-aiplatform.googleapis.com/v1/projects/851970768145/locations/us-central1/reasoningEngines/9119506121181102080:streamQuery
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+      responses:
+        "200":
+          description: Successful stream response

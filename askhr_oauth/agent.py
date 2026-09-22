@@ -1,10 +1,35 @@
 import os,re
+from pathlib import Path
 from dotenv import load_dotenv # <--- Added to load environment variables from .env file
+
+# Always load .env from the askhr_oauth directory regardless of where adk run is executed
+env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
+
+# Remove revoked/stale GOOGLE_APPLICATION_CREDENTIALS key from shell environment so ADC is used
+if "GOOGLE_APPLICATION_CREDENTIALS" in os.environ:
+    del os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+
 from google.adk import Agent
 from google.adk.apps import App
+import pydantic
+
+# Ensure unpickled Pydantic models (such as LlmAgent across Python/ADK versions) never fail when __pydantic_private__ is None
+_orig_pydantic_getattr = pydantic.BaseModel.__getattr__
+
+def _safe_pydantic_getattr(self, item: str):
+    if getattr(self, "__pydantic_private__", None) is None:
+        object.__setattr__(self, "__pydantic_private__", {})
+    try:
+        return _orig_pydantic_getattr(self, item)
+    except (KeyError, TypeError):
+        if item.startswith("_"):
+            return None
+        raise
+
+pydantic.BaseModel.__getattr__ = _safe_pydantic_getattr
 
 
-load_dotenv() # <--- Added to load environment variables from .env file
 print(os.getenv("GOOGLE_GENAI_USE_VERTEXAI"), os.getenv("GOOGLE_CLOUD_PROJECT"))
 #from google.adk.tools.agent_tool import AgentTool
 #AgentTool.propagate_grounding_metadata = False

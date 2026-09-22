@@ -3,6 +3,17 @@ oauath_config
 deploy/auth.cred
 *.cred
 *.credentials
+*.token
+**/hugging_face.token
+
+# Terraform: state holds generated passwords in plaintext; tfvars holds project IDs
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+
 
 # Environment files
 .env
@@ -35,3 +46,8 @@ __pycache__/
 # Git backups
 .git_backup/
 **/.git_backup/
+
+# Large datasets and exports (>100MB)
+journals/
+**/*.xlsx
+massive_stock_data/*.csv

@@ -33,7 +33,7 @@ def get_email_from_oauth_token(token:str) -> str:
     if user_email: # if null then return "[EMAIL_ADDRESS]"  
         return user_email
     else:
-        return "admin_null@prothiag.altostrat.com"
+        return "admin@prothiag.altostrat.com"
 
 def debug_identity(callback_context) -> dict:
     data = callback_context.state.to_dict()      # <-- materialize the dict
@@ -67,7 +67,7 @@ def get_user_context(callback_context, **kwargs):
             logger.info(f"User email: {user_email}")
             logger.info(f"User context: {callback_context}")
         else:
-            state["employee_id"] = "admin_notoken@prothiag.altostrat.com"
+            state["employee_id"] = "admin@prothiag.altostrat.com"
             state["country"] = "USA"
             state["initialized"] = True
             
@@ -78,7 +78,7 @@ def get_user_context(callback_context, **kwargs):
         logger.error(f"Auth id {auth_client_id}")
         logger.error(f"Token {token}")
         state = callback_context.state
-        state["employee_id"] = "admin_error@prothiag.altostrat.com"
+        state["employee_id"] = "admin@prothiag.altostrat.com"
         state["country"] = "USA"
         state["initialized"] = True
         return None
@@ -97,7 +97,7 @@ def search_hr_policy(query: str,tool_context: ToolContext) -> str:
         A summarized string of extracted document chunks from the search results.
     """
     try:
-        client = discoveryengine.SearchServiceClient()
+        client = discoveryengine.SearchServiceClient(transport="rest")
         country = tool_context.state.get("country")
         # Direct path to the engine's serving config as provided in the cURL
         serving_config = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/engines/{SEARCH_APP_ID}/servingConfigs/default_search"
