@@ -115,7 +115,7 @@ def parse_args() -> argparse.Namespace:
         "--agent-gateway",
         default=os.getenv(
             "AGENT_GATEWAY",
-            "projects/sunlit-segment-396117/locations/us-central1/agentGateways/agent-gateway",
+            "projects/sunlit-segment-396117/locations/us-central1/agentGateways/agent-gateway2",
         ),
         help="Network Services Agent Gateway resource name.",
     )
@@ -186,7 +186,7 @@ def main() -> None:
         "GOOGLE_GENAI_USE_ENTERPRISE": "1",
         "AUTH_ID": os.getenv("AUTH_ID", "askhrauth_1"),
         "EMPLOYEE_API_URL": os.getenv("EMPLOYEE_API_URL", "https://employee-gateway-ave1ebyp.uc.gateway.dev"),
-        "AGENT_REGISTRY_ENDPOINT_ID": os.getenv("AGENT_REGISTRY_ENDPOINT_ID", "agentregistry-00000000-0000-0000-277e-b688845989e8"),
+        "AGENT_REGISTRY_ENDPOINT_ID": os.getenv("AGENT_REGISTRY_ENDPOINT_ID", "agentregistry-00000000-0000-0000-b76d-7119d5b402e9"),
         "VERTEX_SEARCH_PROJECT": os.getenv("VERTEX_SEARCH_PROJECT", "bold-kit-384717"),
         "VERTEX_SEARCH_APP_ID": os.getenv("VERTEX_SEARCH_APP_ID", "askhr2_1774835344122"),
         "VERTEX_SEARCH_LOCATION": os.getenv("VERTEX_SEARCH_LOCATION", "global"),
